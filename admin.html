@@ -14,643 +14,814 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f7fa;
             min-height: 100vh;
-            direction: rtl;
-            padding: 20px;
         }
 
         .header {
-            background: white;
-            border-radius: 15px;
+            background: linear-gradient(135deg, #4682B4 0%, #5a9fd4 100%);
+            color: white;
             padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .header h1 {
-            color: #333;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
         .logout-btn {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            background: rgba(255,255,255,0.2);
             color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
 
         .logout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+            background: rgba(255,255,255,0.3);
         }
 
         .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .action-card {
             background: white;
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            max-width: 800px;
-            margin: 0 auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .action-card i {
+            font-size: 3rem;
+            color: #4682B4;
+            margin-bottom: 20px;
+        }
+
+        .action-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .action-card p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
         }
 
         .form-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             margin-bottom: 30px;
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
         }
 
         .form-section h2 {
-            color: #333;
+            color: #2c3e50;
             margin-bottom: 20px;
-            font-size: 1.3rem;
-            border-bottom: 2px solid #4facfe;
             padding-bottom: 10px;
-            text-align: center;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            text-align: right;
         }
 
-        label {
+        .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
+            color: #2c3e50;
             font-weight: 600;
         }
 
-        input[type="text"],
-        input[type="file"] {
+        .form-group input,
+        .form-group select {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e1e5e9;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 1rem;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s;
+            text-align: right;
         }
 
-        input[type="text"]:focus,
-        input[type="file"]:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             outline: none;
-            border-color: #4facfe;
-        }
-
-        input[type="file"] {
-            padding: 8px;
+            border-color: #4682B4;
+            box-shadow: 0 0 0 3px rgba(70, 130, 180, 0.1);
         }
 
         .btn {
-            padding: 12px 25px;
+            background: linear-gradient(135deg, #4682B4 0%, #5a9fd4 100%);
+            color: white;
             border: none;
+            padding: 12px 25px;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin: 5px;
+            transition: all 0.3s;
+            margin-left: 10px;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3);
+            box-shadow: 0 5px 15px rgba(70, 130, 180, 0.3);
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            color: #333;
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
         }
 
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(168, 237, 234, 0.3);
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
         }
 
-        .message {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-            text-align: center;
-        }
-
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .message.info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-
-        .photo-preview {
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .photo-preview img {
-            max-width: 150px;
-            max-height: 150px;
-            border-radius: 10px;
-            border: 2px solid #e1e5e9;
-        }
-
-        .card-preview {
-            margin-top: 30px;
-            text-align: center;
-        }
-
-        /* New Card Design - Matching the Template */
-        .membership-card {
-            width: 600px;
-            height: 380px;
+        .members-list {
             background: white;
             border-radius: 15px;
-            margin: 20px auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            overflow: hidden;
-            position: relative;
-            border: 2px solid #ddd;
-        }
-
-        .card-header {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            position: relative;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .card-header .header-text {
-            flex: 1;
-        }
-
-        .card-header h3 {
-            font-size: 18px;
-            margin: 0;
-            font-weight: bold;
-        }
-
-        .card-header h4 {
-            font-size: 14px;
-            margin: 5px 0 0 0;
-            font-weight: normal;
-            opacity: 0.9;
-        }
-
-        .card-logo {
-            width: 50px;
-            height: 50px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 20px;
-        }
-
-        .card-logo img {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-        }
-
-        .card-body {
             padding: 30px;
-            height: 220px;
-            display: flex;
-            align-items: center;
-            gap: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .members-list.active {
+            display: block;
+        }
+
+        .member-card {
             background: #f8f9fa;
-        }
-
-        .qr-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .qr-code {
-            width: 120px;
-            height: 120px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .qr-placeholder {
-            width: 100px;
-            height: 100px;
-            background: #1e3c72;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 12px;
-            text-align: center;
-            border-radius: 4px;
-        }
-
-        .scan-text {
-            font-size: 12px;
-            color: #666;
-            text-align: center;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4682B4;
         }
 
         .member-info {
-            flex: 1;
-            text-align: center;
-            color: #333;
-        }
-
-        .member-name-ar {
-            font-size: 28px;
-            font-weight: bold;
-            color: #1e3c72;
-            margin-bottom: 8px;
-        }
-
-        .member-name-en {
-            font-size: 18px;
-            color: #666;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
             margin-bottom: 15px;
         }
 
-        .membership-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ff6b35;
-            margin-bottom: 15px;
-        }
-
-        .membership-label {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        .dates-info {
+        .member-actions {
             display: flex;
-            justify-content: center;
-            gap: 30px;
-            font-size: 12px;
-            color: #28a745;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
-        .member-photo {
-            width: 120px;
-            height: 150px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
         }
 
-        .member-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .success-message {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
         }
 
-        .card-footer {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            padding: 12px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 12px;
-            height: 80px;
-        }
-
-        .valid-member {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: bold;
-        }
-
-        .serial-info {
-            text-align: right;
-            opacity: 0.9;
-        }
-
-        .buttons-container {
+        .loading {
             text-align: center;
-            margin-top: 30px;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4682B4;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         @media (max-width: 768px) {
-            .header {
+            .header-content {
                 flex-direction: column;
                 gap: 15px;
                 text-align: center;
             }
-            
-            .buttons-container {
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
+
+            .actions-grid {
+                grid-template-columns: 1fr;
             }
 
-            .membership-card {
-                width: 100%;
-                max-width: 500px;
-                height: auto;
-                min-height: 350px;
+            .form-grid {
+                grid-template-columns: 1fr;
             }
 
-            .card-body {
-                flex-direction: column;
-                height: auto;
-                padding: 20px;
-                gap: 20px;
-            }
-
-            .member-info {
-                order: 1;
-            }
-
-            .qr-section {
-                order: 2;
-            }
-
-            .member-photo {
-                order: 3;
-                width: 100px;
-                height: 120px;
+            .member-actions {
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1><i class="fas fa-id-card"></i> إدارة بطاقات العضوية</h1>
-        <button class="logout-btn" onclick="logout()">
-            <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
-        </button>
+        <div class="header-content">
+            <h1><i class="fas fa-tachometer-alt"></i> لوحة تحكم المسؤولين</h1>
+            <div class="user-info">
+                <span id="userEmail">جاري التحميل...</span>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                </button>
+            </div>
+        </div>
     </div>
 
     <div class="container">
-        <div class="message" id="message"></div>
-
-        <div class="form-section">
-            <h2><i class="fas fa-user-plus"></i> إنشاء بطاقة عضوية جديدة</h2>
-            
-            <form id="memberForm">
-                <div class="form-group">
-                    <label for="arabicName">الاسم بالعربية:</label>
-                    <input type="text" id="arabicName" name="arabicName" required placeholder="الاسم الثلاثي بالعربية">
-                </div>
-
-                <div class="form-group">
-                    <label for="englishName">الاسم بالإنجليزية:</label>
-                    <input type="text" id="englishName" name="englishName" required placeholder="Full Name in English">
-                </div>
-
-                <div class="form-group">
-                    <label for="membershipNumber">رقم العضوية:</label>
-                    <input type="text" id="membershipNumber" name="membershipNumber" required placeholder="655">
-                </div>
-
-                <div class="form-group">
-                    <label for="photo">الصورة الشخصية:</label>
-                    <input type="file" id="photo" name="photo" accept="image/*" required>
-                    <div class="photo-preview" id="photoPreview"></div>
-                </div>
-
-                <div class="buttons-container">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-id-card"></i> إنشاء البطاقة
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="clearForm()">
-                        <i class="fas fa-eraser"></i> مسح البيانات
-                    </button>
-                </div>
-            </form>
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>جاري تحميل النظام...</p>
         </div>
 
-        <div class="card-preview" id="cardPreview"></div>
+        <div id="mainContent" style="display: none;">
+            <div class="actions-grid">
+                <div class="action-card" onclick="showSection('createCard')">
+                    <i class="fas fa-plus-circle"></i>
+                    <h3>إنشاء بطاقة جديدة</h3>
+                    <p>إضافة عضو جديد وإنشاء بطاقة عضوية</p>
+                </div>
+
+                <div class="action-card" onclick="showSection('membersList')">
+                    <i class="fas fa-users"></i>
+                    <h3>إدارة الأعضاء</h3>
+                    <p>عرض وتعديل بيانات الأعضاء الحاليين</p>
+                </div>
+
+                <div class="action-card" onclick="window.open('./scanner.html', '_blank')">
+                    <i class="fas fa-qrcode"></i>
+                    <h3>ماسح الباركود</h3>
+                    <p>التحقق من صحة بطاقات العضوية</p>
+                </div>
+            </div>
+
+            <!-- Create Card Section -->
+            <div class="form-section" id="createCard">
+                <h2><i class="fas fa-plus-circle"></i> إنشاء بطاقة عضوية جديدة</h2>
+                
+                <div class="error-message" id="createError"></div>
+                <div class="success-message" id="createSuccess"></div>
+
+                <form id="createCardForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="arabicName">الاسم بالعربية:</label>
+                            <input type="text" id="arabicName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="englishName">الاسم بالإنجليزية:</label>
+                            <input type="text" id="englishName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="civilId">الرقم المدني:</label>
+                            <input type="text" id="civilId" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="membershipNumber">رقم العضوية:</label>
+                            <input type="text" id="membershipNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">رقم الهاتف:</label>
+                            <input type="tel" id="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">البريد الإلكتروني:</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="membershipType">نوع العضوية:</label>
+                            <select id="membershipType" required>
+                                <option value="">اختر نوع العضوية</option>
+                                <option value="affiliated">عضو منتسب</option>
+                                <option value="non-affiliated">عضو غير منتسب</option>
+                                <option value="honorary">عضو فخري</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">العنوان:</label>
+                            <select id="address" required>
+                                <option value="">اختر المنطقة</option>
+                                <option value="العاصمة">العاصمة</option>
+                                <option value="حولي">حولي</option>
+                                <option value="الفروانية">الفروانية</option>
+                                <option value="الأحمدي">الأحمدي</option>
+                                <option value="الجهراء">الجهراء</option>
+                                <option value="مبارك الكبير">مبارك الكبير</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button type="submit" class="btn">
+                            <i class="fas fa-save"></i> إنشاء البطاقة
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="hideAllSections()">
+                            <i class="fas fa-times"></i> إلغاء
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Members List Section -->
+            <div class="members-list" id="membersList">
+                <h2><i class="fas fa-users"></i> قائمة الأعضاء</h2>
+                
+                <div class="error-message" id="listError"></div>
+                <div class="success-message" id="listSuccess"></div>
+
+                <div id="membersContainer">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>جاري تحميل قائمة الأعضاء...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script type="module" src="./firebase-config.js"></script>
     <script>
-        // Check if user is logged in (simple check)
-        if (!localStorage.getItem('isLoggedIn')) {
-            window.location.href = './login.html';
+        let firebaseReady = false;
+        let currentUser = null;
+
+        // Wait for Firebase to load
+        function waitForFirebase() {
+            if (window.firebaseServices) {
+                firebaseReady = true;
+                setupAuth();
+            } else {
+                setTimeout(waitForFirebase, 100);
+            }
         }
 
-        // Handle photo preview
-        document.getElementById('photo').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('photoPreview').innerHTML = 
-                        `<img src="${e.target.result}" alt="معاينة الصورة">`;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+        function setupAuth() {
+            const { auth, onAuthStateChanged } = window.firebaseServices;
+            
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                    document.getElementById('userEmail').textContent = user.email;
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('mainContent').style.display = 'block';
+                    setupEventListeners();
+                } else {
+                    // User is not logged in, redirect to login
+                    window.location.href = './login.html';
+                }
+            });
+        }
 
-        // Handle form submission
-        document.getElementById('memberForm').addEventListener('submit', handleFormSubmit);
+        function setupEventListeners() {
+            document.getElementById('createCardForm').addEventListener('submit', handleCreateCard);
+        }
 
-        function handleFormSubmit(e) {
+        async function handleCreateCard(e) {
             e.preventDefault();
             
-            const formData = new FormData(e.target);
-            const photoFile = formData.get('photo');
-            
-            if (!photoFile || photoFile.size === 0) {
-                showMessage('يرجى اختيار صورة شخصية', 'error');
+            if (!firebaseReady) {
+                showError('createError', 'النظام غير جاهز بعد');
                 return;
             }
 
-            showMessage('جاري إنشاء البطاقة...', 'info');
-            
-            // Get form data
-            const memberData = {
-                arabicName: formData.get('arabicName'),
-                englishName: formData.get('englishName'),
-                membershipNumber: formData.get('membershipNumber'),
-                createdAt: new Date()
+            const formData = {
+                arabicName: document.getElementById('arabicName').value,
+                englishName: document.getElementById('englishName').value,
+                civilId: document.getElementById('civilId').value,
+                membershipNumber: document.getElementById('membershipNumber').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                membershipType: document.getElementById('membershipType').value,
+                address: document.getElementById('address').value,
+                createdAt: new Date(),
+                createdBy: currentUser.email,
+                status: 'active'
             };
 
-            // Read photo as data URL
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                memberData.photoURL = e.target.result;
-                generateCard(memberData);
-                showMessage('تم إنشاء البطاقة بنجاح!', 'success');
-            };
-            reader.readAsDataURL(photoFile);
+            try {
+                const { db, collection, addDoc } = window.firebaseServices;
+                
+                // Add member to Firestore
+                const docRef = await addDoc(collection(db, 'members'), formData);
+                
+                showSuccess('createSuccess', 'تم إنشاء البطاقة بنجاح! رقم المرجع: ' + docRef.id);
+                
+                // Reset form
+                document.getElementById('createCardForm').reset();
+                
+                // Generate and download card
+                await generateMembershipCard(formData, docRef.id);
+                
+            } catch (error) {
+                console.error('Error creating card:', error);
+                showError('createError', 'حدث خطأ في إنشاء البطاقة: ' + error.message);
+            }
         }
 
-        function generateCard(memberData) {
+        async function generateMembershipCard(memberData, memberId) {
+            try {
+                // Generate unique serial and signature for security
+                const serial = 'CAE' + Math.random().toString(36).substr(2, 5).toUpperCase();
+                const signature = Math.random().toString(36).substr(2, 10).toUpperCase();
+                
+                // Create QR code data with digital signature
+                const qrData = JSON.stringify({
+                    id: memberId,
+                    name: memberData.arabicName,
+                    nameEn: memberData.englishName,
+                    membershipNumber: memberData.membershipNumber,
+                    civilId: memberData.civilId,
+                    issueDate: memberData.createdAt.toISOString(),
+                    expiryDate: new Date(memberData.createdAt.getTime() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+                    serial: serial,
+                    signature: signature,
+                    organization: "Kuwait Association for Medical Laboratories",
+                    verified: true
+                });
+                
+                // Display the card with the exact template design
+                displayMembershipCard(memberData, memberId, qrData, serial, signature);
+                
+            } catch (error) {
+                console.error('Error generating card:', error);
+                showError('createError', 'حدث خطأ في إنشاء البطاقة المرئية');
+            }
+        }
+
+        function displayMembershipCard(memberData, memberId, qrData, serial, signature) {
             const issueDate = new Date(memberData.createdAt);
-            const expiryDate = new Date(memberData.createdAt);
-            expiryDate.setFullYear(expiryDate.getFullYear() + 1);
-            
-            // Generate unique serial number
-            const serial = 'CAE' + Math.random().toString(36).substr(2, 5).toUpperCase();
-            const signature = Math.random().toString(36).substr(2, 10).toUpperCase();
+            const expiryDate = new Date(memberData.createdAt.getTime() + 365 * 24 * 60 * 60 * 1000);
             
             const cardHtml = `
-                <div class="membership-card">
-                    <div class="card-header">
-                        <div class="header-text">
-                            <h3>Kuwait Association for Medical Laboratories</h3>
-                            <h4>الجمعية الكويتية للمختبرات الطبية</h4>
-                        </div>
-                        <div class="card-logo">
-                            <img src="./logo.jpeg" alt="KAML Logo">
-                        </div>
-                    </div>
+                <div class="membership-card-preview">
+                    <h3 style="text-align: center; color: #1e3c72; margin-bottom: 20px;">✅ تم إنشاء البطاقة بنجاح</h3>
                     
-                    <div class="card-body">
-                        <div class="qr-section">
-                            <div class="qr-code" id="qrCodeContainer">
-                                <div class="qr-placeholder">QR CODE</div>
+                    <div class="membership-card" style="
+                        width: 600px;
+                        height: 380px;
+                        background: white;
+                        border-radius: 15px;
+                        margin: 20px auto;
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                        overflow: hidden;
+                        border: 2px solid #ddd;
+                        font-family: Arial, sans-serif;
+                    ">
+                        <!-- Card Header -->
+                        <div style="
+                            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+                            color: white;
+                            padding: 20px;
+                            height: 80px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                        ">
+                            <div style="flex: 1;">
+                                <h3 style="font-size: 18px; margin: 0; font-weight: bold;">Kuwait Association for Medical Laboratories</h3>
+                                <h4 style="font-size: 14px; margin: 5px 0 0 0; font-weight: normal; opacity: 0.9;">الجمعية الكويتية للمختبرات الطبية</h4>
                             </div>
-                            <div class="scan-text">📱 Scan for verification</div>
+                            <div style="
+                                width: 50px;
+                                height: 50px;
+                                background: white;
+                                border-radius: 50%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                margin-left: 20px;
+                            ">
+                                <img src="./logo.jpeg" alt="KAML Logo" style="width: 40px; height: 40px; object-fit: contain;">
+                            </div>
                         </div>
                         
-                        <div class="member-info">
-                            <div class="member-name-ar">${memberData.arabicName}</div>
-                            <div class="member-name-en">${memberData.englishName}</div>
-                            <div class="membership-number">${memberData.membershipNumber}</div>
-                            <div class="membership-label">Membership No:</div>
-                            <div class="dates-info">
-                                <div>📅 Issue: ${issueDate.toLocaleDateString('en-GB')}</div>
-                                <div>📅 Expiry: ${expiryDate.toLocaleDateString('en-GB')}</div>
+                        <!-- Card Body -->
+                        <div style="
+                            padding: 30px;
+                            height: 220px;
+                            display: flex;
+                            align-items: center;
+                            gap: 30px;
+                            background: #f8f9fa;
+                        ">
+                            <!-- QR Section -->
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                                <div id="qrCodeContainer-${memberId}" style="
+                                    width: 120px;
+                                    height: 120px;
+                                    border: 2px solid #ddd;
+                                    border-radius: 8px;
+                                    background: white;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                ">
+                                    <div style="
+                                        width: 100px;
+                                        height: 100px;
+                                        background: #1e3c72;
+                                        color: white;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        font-size: 12px;
+                                        text-align: center;
+                                        border-radius: 4px;
+                                    ">QR CODE</div>
+                                </div>
+                                <div style="font-size: 12px; color: #666; text-align: center;">📱 Scan for verification</div>
+                            </div>
+                            
+                            <!-- Member Info -->
+                            <div style="flex: 1; text-align: center; color: #333;">
+                                <div style="font-size: 28px; font-weight: bold; color: #1e3c72; margin-bottom: 8px;">${memberData.arabicName}</div>
+                                <div style="font-size: 18px; color: #666; margin-bottom: 15px;">${memberData.englishName}</div>
+                                <div style="font-size: 24px; font-weight: bold; color: #ff6b35; margin-bottom: 15px;">${memberData.membershipNumber}</div>
+                                <div style="font-size: 14px; color: #666; margin-bottom: 5px;">Membership No:</div>
+                                <div style="display: flex; justify-content: center; gap: 30px; font-size: 12px; color: #28a745;">
+                                    <div>📅 Issue: ${issueDate.toLocaleDateString('en-GB')}</div>
+                                    <div>📅 Expiry: ${expiryDate.toLocaleDateString('en-GB')}</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Member Photo Placeholder -->
+                            <div style="
+                                width: 120px;
+                                height: 150px;
+                                border: 2px solid #ddd;
+                                border-radius: 10px;
+                                background: white;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: #666;
+                                font-size: 12px;
+                            ">
+                                صورة العضو<br>Member Photo
                             </div>
                         </div>
                         
-                        <div class="member-photo">
-                            <img src="${memberData.photoURL}" alt="صورة العضو">
-                        </div>
-                    </div>
-                    
-                    <div class="card-footer">
-                        <div class="valid-member">
-                            ✅✅ Valid Member
-                        </div>
-                        <div class="serial-info">
-                            📋 Serial: ${serial} | Signature: ${signature}...
+                        <!-- Card Footer -->
+                        <div style="
+                            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+                            color: white;
+                            padding: 12px 30px;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            font-size: 12px;
+                            height: 80px;
+                        ">
+                            <div style="display: flex; align-items: center; gap: 8px; font-weight: bold;">
+                                ✅✅ Valid Member
+                            </div>
+                            <div style="text-align: right; opacity: 0.9;">
+                                📋 Serial: ${serial} | Signature: ${signature}...
+                            </div>
                         </div>
                     </div>
                 </div>
             `;
             
-            document.getElementById('cardPreview').innerHTML = cardHtml;
+            // Display the card
+            const cardContainer = document.getElementById('cardPreview') || document.createElement('div');
+            cardContainer.innerHTML = cardHtml;
             
-            // Generate QR Code after a short delay to ensure DOM is ready
+            if (!document.getElementById('cardPreview')) {
+                cardContainer.id = 'cardPreview';
+                cardContainer.style.marginTop = '30px';
+                document.querySelector('.container').appendChild(cardContainer);
+            }
+            
+            // Generate QR Code after DOM is ready
             setTimeout(() => {
-                generateQRCode(memberData, issueDate, expiryDate, serial);
+                generateQRCodeForCard(qrData, `qrCodeContainer-${memberId}`);
             }, 200);
         }
 
-        function generateQRCode(memberData, issueDate, expiryDate, serial) {
-            const qrData = JSON.stringify({
-                name: memberData.arabicName,
-                nameEn: memberData.englishName,
-                membershipNumber: memberData.membershipNumber,
-                issueDate: issueDate.toISOString(),
-                expiryDate: expiryDate.toISOString(),
-                serial: serial,
-                organization: "Kuwait Association for Medical Laboratories"
-            });
-            
-            const qrContainer = document.getElementById('qrCodeContainer');
-            if (qrContainer) {
-                // Clear the placeholder
-                qrContainer.innerHTML = '';
-                
-                // Generate QR code using canvas
+        function generateQRCodeForCard(qrData, containerId) {
+            // Load QR Code library if not already loaded
+            if (typeof QRCode === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
+                script.onload = () => {
+                    createQRCode(qrData, containerId);
+                };
+                document.head.appendChild(script);
+            } else {
+                createQRCode(qrData, containerId);
+            }
+        }
+
+        function createQRCode(qrData, containerId) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML = '';
                 const canvas = document.createElement('canvas');
-                qrContainer.appendChild(canvas);
+                container.appendChild(canvas);
                 
-                if (typeof QRCode !== 'undefined') {
-                    QRCode.toCanvas(canvas, qrData, {
-                        width: 100,
-                        height: 100,
-                        margin: 1,
-                        color: {
-                            dark: '#1e3c72',
-                            light: '#ffffff'
-                        }
-                    }, function (error) {
-                        if (error) {
-                            console.error('QR Code generation error:', error);
-                            qrContainer.innerHTML = '<div class="qr-placeholder">QR ERROR</div>';
-                        }
-                    });
-                } else {
-                    // Fallback if QRCode library doesn't load
-                    console.error('QRCode library not loaded');
-                    qrContainer.innerHTML = '<div class="qr-placeholder">QR CODE<br>LIBRARY<br>ERROR</div>';
-                }
+                QRCode.toCanvas(canvas, qrData, {
+                    width: 100,
+                    height: 100,
+                    margin: 1,
+                    color: {
+                        dark: '#1e3c72',
+                        light: '#ffffff'
+                    }
+                }, function (error) {
+                    if (error) {
+                        console.error('QR Code generation error:', error);
+                        container.innerHTML = '<div style="width: 100px; height: 100px; background: #1e3c72; color: white; display: flex; align-items: center; justify-content: center; font-size: 10px; text-align: center; border-radius: 4px;">QR ERROR</div>';
+                    }
+                });
             }
         }
 
-        function showMessage(text, type) {
-            const messageDiv = document.getElementById('message');
-            messageDiv.textContent = text;
-            messageDiv.className = `message ${type}`;
-            messageDiv.style.display = 'block';
+        function getArabicMembershipType(type) {
+            const types = {
+                'affiliated': 'عضو منتسب',
+                'non-affiliated': 'عضو غير منتسب',
+                'honorary': 'عضو فخري'
+            };
+            return types[type] || type;
+        }
+
+        async function loadMembers() {
+            if (!firebaseReady) return;
             
-            if (type !== 'info') {
-                setTimeout(() => {
-                    messageDiv.style.display = 'none';
-                }, 5000);
+            try {
+                const { db, collection, getDocs } = window.firebaseServices;
+                const querySnapshot = await getDocs(collection(db, 'members'));
+                
+                const membersContainer = document.getElementById('membersContainer');
+                membersContainer.innerHTML = '';
+                
+                if (querySnapshot.empty) {
+                    membersContainer.innerHTML = '<p style="text-align: center; color: #666;">لا توجد بطاقات مُنشأة بعد</p>';
+                    return;
+                }
+                
+                querySnapshot.forEach((doc) => {
+                    const member = doc.data();
+                    const memberCard = createMemberCard(doc.id, member);
+                    membersContainer.appendChild(memberCard);
+                });
+                
+            } catch (error) {
+                console.error('Error loading members:', error);
+                showError('listError', 'حدث خطأ في تحميل قائمة الأعضاء');
             }
         }
 
-        function clearForm() {
-            document.getElementById('memberForm').reset();
-            document.getElementById('photoPreview').innerHTML = '';
-            document.getElementById('cardPreview').innerHTML = '';
+        function createMemberCard(id, member) {
+            const card = document.createElement('div');
+            card.className = 'member-card';
+            
+            card.innerHTML = `
+                <div class="member-info">
+                    <div><strong>الاسم:</strong> ${member.arabicName}</div>
+                    <div><strong>Name:</strong> ${member.englishName}</div>
+                    <div><strong>رقم العضوية:</strong> ${member.membershipNumber}</div>
+                    <div><strong>الرقم المدني:</strong> ${member.civilId}</div>
+                    <div><strong>الهاتف:</strong> ${member.phone}</div>
+                    <div><strong>البريد الإلكتروني:</strong> ${member.email}</div>
+                    <div><strong>نوع العضوية:</strong> ${getArabicMembershipType(member.membershipType)}</div>
+                    <div><strong>العنوان:</strong> ${member.address}</div>
+                </div>
+                <div class="member-actions">
+                    ${member.cardUrl ? `<button class="btn" onclick="window.open('${member.cardUrl}', '_blank')"><i class="fas fa-download"></i> تحميل البطاقة</button>` : ''}
+                    <button class="btn btn-danger" onclick="deleteMember('${id}')"><i class="fas fa-trash"></i> حذف</button>
+                </div>
+            `;
+            
+            return card;
         }
 
-        function logout() {
-            localStorage.removeItem('isLoggedIn');
-            window.location.href = './login.html';
+        async function deleteMember(id) {
+            if (!confirm('هل أنت متأكد من حذف هذا العضو؟')) return;
+            
+            try {
+                const { db, doc, deleteDoc } = window.firebaseServices;
+                await deleteDoc(doc(db, 'members', id));
+                
+                showSuccess('listSuccess', 'تم حذف العضو بنجاح');
+                loadMembers(); // Reload the list
+                
+            } catch (error) {
+                console.error('Error deleting member:', error);
+                showError('listError', 'حدث خطأ في حذف العضو');
+            }
         }
+
+        function showSection(sectionId) {
+            hideAllSections();
+            document.getElementById(sectionId).classList.add('active');
+            
+            if (sectionId === 'membersList') {
+                loadMembers();
+            }
+        }
+
+        function hideAllSections() {
+            document.querySelectorAll('.form-section, .members-list').forEach(section => {
+                section.classList.remove('active');
+            });
+        }
+
+        async function logout() {
+            if (!firebaseReady) return;
+            
+            try {
+                const { auth, signOut } = window.firebaseServices;
+                await signOut(auth);
+                window.location.href = './login.html';
+            } catch (error) {
+                console.error('Error signing out:', error);
+            }
+        }
+
+        function showError(elementId, message) {
+            const errorDiv = document.getElementById(elementId);
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(elementId, message) {
+            const successDiv = document.getElementById(elementId);
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Start the application
+        waitForFirebase();
     </script>
 </body>
 </html>
