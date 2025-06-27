@@ -81,7 +81,6 @@
             align-items: center;
             gap: 8px;
             margin: 5px;
-            text-decoration: none;
         }
 
         .btn-primary {
@@ -246,38 +245,55 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBKvr6ZI_M_s_hk3Ch2ivWBuY5jSI9QxDo",
+            authDomain: "kaml-membership-system.firebaseapp.com",
+            projectId: "kaml-membership-system",
+            storageBucket: "kaml-membership-system.firebasestorage.app",
+            messagingSenderId: "1083658943439",
+            appId: "1:1083658943439:web:70d45c869a0af1bdeab0ba",
+            measurementId: "G-P952KYS3ZZ"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         let stream = null;
         let scanning = false;
 
-        function startScanner() {
-            navigator.mediaDevices.getUserMedia({ 
-                video: { 
-                    facingMode: 'environment'
-                } 
-            })
-            .then(function(mediaStream) {
+        window.startScanner = async function() {
+            try {
                 const video = document.getElementById('video');
-                video.srcObject = mediaStream;
-                stream = mediaStream;
+                
+                // Request camera access
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        facingMode: 'environment' // Use back camera if available
+                    } 
+                });
+                
+                video.srcObject = stream;
                 scanning = true;
                 
                 showMessage('تم تشغيل الكاميرا بنجاح. وجه الكاميرا نحو رمز QR', 'success');
                 
-                // Simulate QR scan after 3 seconds for demo
-                setTimeout(() => {
-                    if (scanning) {
-                        simulateQRScan();
-                    }
-                }, 3000);
-            })
-            .catch(function(error) {
+                // Start scanning simulation (in real implementation, use a QR code library)
+                simulateQRScan();
+                
+            } catch (error) {
                 console.error('Error accessing camera:', error);
                 showMessage('خطأ في الوصول للكاميرا: ' + error.message, 'error');
-            });
+            }
         }
 
-        function stopScanner() {
+        window.stopScanner = function() {
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
                 stream = null;
@@ -290,26 +306,60 @@
             showMessage('تم إيقاف الماسح', 'info');
         }
 
+        // Simulate QR code scanning (for demo purposes)
         function simulateQRScan() {
-            // Demo member data
-            const demoData = {
-                arabicName: 'أحمد محمد الكندري',
-                englishName: 'Ahmed Mohammed Al-Kandari',
-                membershipNumber: 'KAML-2024-001',
-                photoURL: 'https://via.placeholder.com/100x120/4facfe/ffffff?text=صورة',
-                status: 'active',
-                createdAt: new Date('2024-01-01')
-            };
+            if (!scanning) return;
             
-            displayMemberInfo(demoData);
-            showMessage('تم العثور على العضو بنجاح! (بيانات تجريبية)', 'success');
+            // In a real implementation, you would use a QR code scanning library
+            // For demo, we'll simulate finding a QR code after 3 seconds
+            setTimeout(() => {
+                if (scanning) {
+                    const demoMembershipNumber = 'KAML-2024-001';
+                    searchMember(demoMembershipNumber);
+                }
+            }, 3000);
+        }
+
+        async function searchMember(membershipNumber) {
+            try {
+                showMessage('جاري البحث عن العضو...', 'info');
+                
+                const q = query(
+                    collection(db, 'members'), 
+                    where('membershipNumber', '==', membershipNumber)
+                );
+                
+                const querySnapshot = await getDocs(q);
+                
+                if (!querySnapshot.empty) {
+                    const memberData = querySnapshot.docs[0].data();
+                    displayMemberInfo(memberData);
+                    showMessage('تم العثور على العضو بنجاح!', 'success');
+                } else {
+                    // Show demo data if not found in database
+                    const demoData = {
+                        arabicName: 'أحمد محمد الكندري',
+                        englishName: 'Ahmed Mohammed Al-Kandari',
+                        membershipNumber: 'KAML-2024-001',
+                        photoURL: 'https://via.placeholder.com/100x120/4facfe/ffffff?text=صورة',
+                        status: 'active',
+                        createdAt: new Date('2024-01-01')
+                    };
+                    displayMemberInfo(demoData);
+                    showMessage('عرض بيانات تجريبية (العضو غير موجود في قاعدة البيانات)', 'info');
+                }
+                
+            } catch (error) {
+                console.error('Error searching member:', error);
+                showMessage('خطأ في البحث: ' + error.message, 'error');
+            }
         }
 
         function displayMemberInfo(memberData) {
             const memberInfo = document.getElementById('memberInfo');
             const memberCard = document.getElementById('memberCard');
             
-            const expiryDate = new Date(memberData.createdAt);
+            const expiryDate = new Date(memberData.createdAt.toDate ? memberData.createdAt.toDate() : memberData.createdAt);
             expiryDate.setFullYear(expiryDate.getFullYear() + 1);
             
             memberCard.innerHTML = `

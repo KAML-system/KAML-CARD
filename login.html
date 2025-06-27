@@ -186,17 +186,37 @@
         </a>
     </div>
 
-    <script>
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBKvr6ZI_M_s_hk3Ch2ivWBuY5jSI9QxDo",
+            authDomain: "kaml-membership-system.firebaseapp.com",
+            projectId: "kaml-membership-system",
+            storageBucket: "kaml-membership-system.firebasestorage.app",
+            messagingSenderId: "1083658943439",
+            appId: "1:1083658943439:web:70d45c869a0af1bdeab0ba",
+            measurementId: "G-P952KYS3ZZ"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
         // Default admin credentials
         const defaultCredentials = {
             username: 'admin',
-            password: 'kaml2024'
+            password: 'kaml2024',
+            email: 'admin@kaml.org.kw'
         };
 
         // Handle form submission
         document.getElementById('loginForm').addEventListener('submit', handleLogin);
 
-        function handleLogin(e) {
+        async function handleLogin(e) {
             e.preventDefault();
             
             const formData = new FormData(e.target);
@@ -205,15 +225,21 @@
             
             // Check if credentials match default admin
             if (username === defaultCredentials.username && password === defaultCredentials.password) {
-                showMessage('تم تسجيل الدخول بنجاح!', 'success');
-                
-                // Set login status
-                localStorage.setItem('isLoggedIn', 'true');
-                
-                // Redirect to admin page
-                setTimeout(() => {
-                    window.location.href = './admin.html';
-                }, 1500);
+                try {
+                    // Sign in with Firebase using email
+                    await signInWithEmailAndPassword(auth, defaultCredentials.email, password);
+                    
+                    showMessage('تم تسجيل الدخول بنجاح!', 'success');
+                    
+                    // Redirect to admin page
+                    setTimeout(() => {
+                        window.location.href = './admin.html';
+                    }, 1500);
+                    
+                } catch (error) {
+                    console.error('Firebase auth error:', error);
+                    showMessage('خطأ في المصادقة: ' + error.message, 'error');
+                }
             } else {
                 showMessage('اسم المستخدم أو كلمة المرور غير صحيحة', 'error');
             }
