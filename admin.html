@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة البطاقات - الجمعية الكويتية للمختبرات الطبية</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="./config.js"></script>
+    <title>إدارة البطاقات - نظام بطاقات العضوية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -15,362 +14,674 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #87CEEB 0%, #4682B4 100%);
+            background: #f5f7fa;
             min-height: 100vh;
-            color: #333;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
         }
 
         .header {
-            text-align: center;
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
+            background: linear-gradient(135deg, #4682B4 0%, #5a9fd4 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .header .logo {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 15px;
-            background: #4682B4;
-            border-radius: 50%;
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 30px;
         }
 
         .header h1 {
-            color: #4682B4;
-            margin-bottom: 10px;
-            font-size: 28px;
+            font-size: 1.8rem;
         }
 
-        .header p {
-            color: #666;
-            font-size: 16px;
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        .card-form {
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .action-card {
             background: white;
-            padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .action-card i {
+            font-size: 3rem;
+            color: #4682B4;
+            margin-bottom: 20px;
+        }
+
+        .action-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .action-card p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             margin-bottom: 30px;
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            text-align: right;
         }
 
-        label {
+        .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #555;
+            color: #2c3e50;
             font-weight: 600;
         }
 
-        input[type="text"], input[type="file"], select {
+        .form-group input,
+        .form-group select {
             width: 100%;
-            padding: 15px;
+            padding: 12px 15px;
             border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: border-color 0.3s;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            text-align: right;
         }
 
-        input[type="text"]:focus, select:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             outline: none;
             border-color: #4682B4;
+            box-shadow: 0 0 0 3px rgba(70, 130, 180, 0.1);
         }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .create-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(45deg, #4682B4, #87CEEB);
+        .btn {
+            background: linear-gradient(135deg, #4682B4 0%, #5a9fd4 100%);
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 18px;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
-            margin-bottom: 20px;
+            transition: all 0.3s;
+            margin-left: 10px;
         }
 
-        .create-btn:hover {
+        .btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(70, 130, 180, 0.3);
         }
 
-        .create-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
         }
 
-        .result-section {
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .members-list {
             background: white;
+            border-radius: 15px;
             padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             display: none;
-            text-align: center;
         }
 
-        .card-preview {
-            max-width: 100%;
-            height: auto;
-            border: 3px solid #4682B4;
-            border-radius: 15px;
-            margin: 20px 0;
+        .members-list.active {
+            display: block;
         }
 
-        .download-btn {
-            display: inline-block;
-            padding: 15px 30px;
-            background: linear-gradient(45deg, #28a745, #20c997);
-            color: white;
-            text-decoration: none;
+        .member-card {
+            background: #f8f9fa;
             border-radius: 10px;
-            font-weight: 600;
-            margin: 10px;
-            transition: transform 0.2s;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4682B4;
         }
 
-        .download-btn:hover {
-            transform: translateY(-2px);
+        .member-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .member-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .error-message {
             background: #ffebee;
             color: #c62828;
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
-            margin: 20px 0;
-            text-align: center;
+            margin-bottom: 20px;
             display: none;
         }
 
         .success-message {
             background: #e8f5e8;
             color: #2e7d32;
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
-            margin: 20px 0;
-            text-align: center;
+            margin-bottom: 20px;
             display: none;
         }
 
-        .navigation {
+        .loading {
             text-align: center;
-            margin-top: 30px;
+            padding: 40px;
         }
 
-        .nav-btn {
-            display: inline-block;
-            padding: 12px 24px;
-            background: #6c757d;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            margin: 0 10px;
-            transition: background 0.3s;
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4682B4;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
         }
 
-        .nav-btn:hover {
-            background: #5a6268;
-        }
-
-        .logout-btn {
-            background: #dc3545;
-        }
-
-        .logout-btn:hover {
-            background: #c82333;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         @media (max-width: 768px) {
-            .form-row {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .actions-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .container {
-                padding: 10px;
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .member-actions {
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">
-                <i class="fas fa-microscope"></i>
-            </div>
-            <h1>إدارة بطاقات العضوية</h1>
-            <p>الجمعية الكويتية للمختبرات الطبية</p>
-        </div>
-
-        <div class="card-form">
-            <h2 style="color: #4682B4; margin-bottom: 20px; text-align: center;">
-                <i class="fas fa-id-card"></i>
-                إنشاء بطاقة عضوية جديدة
-            </h2>
-
-            <form id="cardForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="nameEn">الاسم بالإنجليزية:</label>
-                        <input type="text" id="nameEn" name="nameEn" required placeholder="John Doe">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="nameAr">الاسم بالعربية:</label>
-                        <input type="text" id="nameAr" name="nameAr" required placeholder="جون دو">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="memberId">رقم العضوية:</label>
-                        <input type="text" id="memberId" name="memberId" required placeholder="001">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="organization">المؤسسة:</label>
-                        <input type="text" id="organization" name="organization" placeholder="مختبر الكويت الطبي">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="photo">الصورة الشخصية:</label>
-                    <input type="file" id="photo" name="photo" accept="image/*" required>
-                </div>
-
-                <div class="error-message" id="errorMessage"></div>
-                <div class="success-message" id="successMessage"></div>
-
-                <button type="submit" class="create-btn" id="createBtn">
-                    <i class="fas fa-plus-circle"></i>
-                    إنشاء البطاقة
+    <div class="header">
+        <div class="header-content">
+            <h1><i class="fas fa-tachometer-alt"></i> لوحة تحكم المسؤولين</h1>
+            <div class="user-info">
+                <span id="userEmail">جاري التحميل...</span>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
                 </button>
-            </form>
-        </div>
-
-        <div class="result-section" id="resultSection">
-            <h3 style="color: #4682B4; margin-bottom: 20px;">
-                <i class="fas fa-check-circle"></i>
-                تم إنشاء البطاقة بنجاح!
-            </h3>
-            <img id="cardPreview" class="card-preview" alt="معاينة البطاقة">
-            <br>
-            <a href="#" id="downloadBtn" class="download-btn">
-                <i class="fas fa-download"></i>
-                تحميل البطاقة
-            </a>
-        </div>
-
-        <div class="navigation">
-            <a href="./scanner.html" class="nav-btn">
-                <i class="fas fa-qrcode"></i>
-                ماسح الباركود
-            </a>
-            <a href="./index.html" class="nav-btn">
-                <i class="fas fa-home"></i>
-                الصفحة الرئيسية
-            </a>
-            <a href="#" class="nav-btn logout-btn" onclick="logout()">
-                <i class="fas fa-sign-out-alt"></i>
-                تسجيل الخروج
-            </a>
+            </div>
         </div>
     </div>
 
+    <div class="container">
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>جاري تحميل النظام...</p>
+        </div>
+
+        <div id="mainContent" style="display: none;">
+            <div class="actions-grid">
+                <div class="action-card" onclick="showSection('createCard')">
+                    <i class="fas fa-plus-circle"></i>
+                    <h3>إنشاء بطاقة جديدة</h3>
+                    <p>إضافة عضو جديد وإنشاء بطاقة عضوية</p>
+                </div>
+
+                <div class="action-card" onclick="showSection('membersList')">
+                    <i class="fas fa-users"></i>
+                    <h3>إدارة الأعضاء</h3>
+                    <p>عرض وتعديل بيانات الأعضاء الحاليين</p>
+                </div>
+
+                <div class="action-card" onclick="window.open('./scanner.html', '_blank')">
+                    <i class="fas fa-qrcode"></i>
+                    <h3>ماسح الباركود</h3>
+                    <p>التحقق من صحة بطاقات العضوية</p>
+                </div>
+            </div>
+
+            <!-- Create Card Section -->
+            <div class="form-section" id="createCard">
+                <h2><i class="fas fa-plus-circle"></i> إنشاء بطاقة عضوية جديدة</h2>
+                
+                <div class="error-message" id="createError"></div>
+                <div class="success-message" id="createSuccess"></div>
+
+                <form id="createCardForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="arabicName">الاسم بالعربية:</label>
+                            <input type="text" id="arabicName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="englishName">الاسم بالإنجليزية:</label>
+                            <input type="text" id="englishName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="civilId">الرقم المدني:</label>
+                            <input type="text" id="civilId" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="membershipNumber">رقم العضوية:</label>
+                            <input type="text" id="membershipNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">رقم الهاتف:</label>
+                            <input type="tel" id="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">البريد الإلكتروني:</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="membershipType">نوع العضوية:</label>
+                            <select id="membershipType" required>
+                                <option value="">اختر نوع العضوية</option>
+                                <option value="affiliated">عضو منتسب</option>
+                                <option value="non-affiliated">عضو غير منتسب</option>
+                                <option value="honorary">عضو فخري</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">العنوان:</label>
+                            <select id="address" required>
+                                <option value="">اختر المنطقة</option>
+                                <option value="العاصمة">العاصمة</option>
+                                <option value="حولي">حولي</option>
+                                <option value="الفروانية">الفروانية</option>
+                                <option value="الأحمدي">الأحمدي</option>
+                                <option value="الجهراء">الجهراء</option>
+                                <option value="مبارك الكبير">مبارك الكبير</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button type="submit" class="btn">
+                            <i class="fas fa-save"></i> إنشاء البطاقة
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="hideAllSections()">
+                            <i class="fas fa-times"></i> إلغاء
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Members List Section -->
+            <div class="members-list" id="membersList">
+                <h2><i class="fas fa-users"></i> قائمة الأعضاء</h2>
+                
+                <div class="error-message" id="listError"></div>
+                <div class="success-message" id="listSuccess"></div>
+
+                <div id="membersContainer">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>جاري تحميل قائمة الأعضاء...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./firebase-config.js"></script>
     <script>
-        // التحقق من تسجيل الدخول
-        if (!sessionStorage.getItem('kaml_logged_in')) {
-            window.location.href = './login.html';
+        let firebaseReady = false;
+        let currentUser = null;
+
+        // Wait for Firebase to load
+        function waitForFirebase() {
+            if (window.firebaseServices) {
+                firebaseReady = true;
+                setupAuth();
+            } else {
+                setTimeout(waitForFirebase, 100);
+            }
         }
 
-        // ⚠️ تحديث هذا الرابط بعد نشر الجزء الخلفي
-        const API_BASE_URL = 'https://your-backend-url.herokuapp.com'; // أو رابط الخادم الخاص بك
-        
-        // للاختبار المحلي، استخدم:
-        // const API_BASE_URL = 'http://localhost:5000';
+        function setupAuth() {
+            const { auth, onAuthStateChanged } = window.firebaseServices;
+            
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                    document.getElementById('userEmail').textContent = user.email;
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('mainContent').style.display = 'block';
+                    setupEventListeners();
+                } else {
+                    // User is not logged in, redirect to login
+                    window.location.href = './login.html';
+                }
+            });
+        }
 
-        document.getElementById('cardForm').addEventListener('submit', async function(e) {
+        function setupEventListeners() {
+            document.getElementById('createCardForm').addEventListener('submit', handleCreateCard);
+        }
+
+        async function handleCreateCard(e) {
             e.preventDefault();
             
-            const formData = new FormData();
-            formData.append('name_en', document.getElementById('nameEn').value);
-            formData.append('name_ar', document.getElementById('nameAr').value);
-            formData.append('member_id', document.getElementById('memberId').value);
-            formData.append('organization', document.getElementById('organization').value);
-            formData.append('photo', document.getElementById('photo').files[0]);
-            
-            const errorDiv = document.getElementById('errorMessage');
-            const successDiv = document.getElementById('successMessage');
-            const createBtn = document.getElementById('createBtn');
-            
-            // إخفاء الرسائل السابقة
-            errorDiv.style.display = 'none';
-            successDiv.style.display = 'none';
-            document.getElementById('resultSection').style.display = 'none';
-            
-            // تعطيل الزر أثناء المعالجة
-            createBtn.disabled = true;
-            createBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإنشاء...';
+            if (!firebaseReady) {
+                showError('createError', 'النظام غير جاهز بعد');
+                return;
+            }
+
+            const formData = {
+                arabicName: document.getElementById('arabicName').value,
+                englishName: document.getElementById('englishName').value,
+                civilId: document.getElementById('civilId').value,
+                membershipNumber: document.getElementById('membershipNumber').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                membershipType: document.getElementById('membershipType').value,
+                address: document.getElementById('address').value,
+                createdAt: new Date(),
+                createdBy: currentUser.email,
+                status: 'active'
+            };
+
+            try {
+                const { db, collection, addDoc } = window.firebaseServices;
+                
+                // Add member to Firestore
+                const docRef = await addDoc(collection(db, 'members'), formData);
+                
+                showSuccess('createSuccess', 'تم إنشاء البطاقة بنجاح! رقم المرجع: ' + docRef.id);
+                
+                // Reset form
+                document.getElementById('createCardForm').reset();
+                
+                // Generate and download card
+                await generateMembershipCard(formData, docRef.id);
+                
+            } catch (error) {
+                console.error('Error creating card:', error);
+                showError('createError', 'حدث خطأ في إنشاء البطاقة: ' + error.message);
+            }
+        }
+
+        async function generateMembershipCard(memberData, memberId) {
+            try {
+                // Create canvas for card generation
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Set canvas size (standard card size)
+                canvas.width = 800;
+                canvas.height = 500;
+                
+                // Background gradient
+                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                gradient.addColorStop(0, '#4682B4');
+                gradient.addColorStop(1, '#5a9fd4');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // White content area
+                ctx.fillStyle = 'white';
+                ctx.fillRect(50, 50, canvas.width - 100, canvas.height - 100);
+                
+                // Header
+                ctx.fillStyle = '#2c3e50';
+                ctx.font = 'bold 32px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Kuwait Association of Medical Laboratories', canvas.width / 2, 120);
+                
+                ctx.font = 'bold 24px Arial';
+                ctx.fillText('الجمعية الكويتية للمختبرات الطبية', canvas.width / 2, 150);
+                
+                // Member info
+                ctx.font = '20px Arial';
+                ctx.textAlign = 'right';
+                ctx.fillText('الاسم: ' + memberData.arabicName, canvas.width - 80, 220);
+                ctx.fillText('Name: ' + memberData.englishName, canvas.width - 80, 250);
+                ctx.fillText('رقم العضوية: ' + memberData.membershipNumber, canvas.width - 80, 280);
+                ctx.fillText('الرقم المدني: ' + memberData.civilId, canvas.width - 80, 310);
+                ctx.fillText('نوع العضوية: ' + getArabicMembershipType(memberData.membershipType), canvas.width - 80, 340);
+                
+                // QR Code placeholder (you can integrate a QR code library here)
+                ctx.fillStyle = '#e0e0e0';
+                ctx.fillRect(80, 200, 120, 120);
+                ctx.fillStyle = '#666';
+                ctx.font = '14px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('QR Code', 140, 265);
+                
+                // Convert canvas to blob and download
+                canvas.toBlob(async (blob) => {
+                    try {
+                        // Save to Firebase Storage
+                        const { storage, ref, uploadBytes, getDownloadURL } = window.firebaseServices;
+                        const storageRef = ref(storage, `cards/${memberId}.png`);
+                        await uploadBytes(storageRef, blob);
+                        const downloadURL = await getDownloadURL(storageRef);
+                        
+                        // Update member document with card URL
+                        const { db, doc, updateDoc } = window.firebaseServices;
+                        await updateDoc(doc(db, 'members', memberId), {
+                            cardUrl: downloadURL
+                        });
+                        
+                        // Download card locally
+                        const link = document.createElement('a');
+                        link.href = URL.createObjectURL(blob);
+                        link.download = `card_${memberData.membershipNumber}.png`;
+                        link.click();
+                        
+                    } catch (error) {
+                        console.error('Error saving card:', error);
+                    }
+                }, 'image/png');
+                
+            } catch (error) {
+                console.error('Error generating card:', error);
+                showError('createError', 'حدث خطأ في إنشاء البطاقة المرئية');
+            }
+        }
+
+        function getArabicMembershipType(type) {
+            const types = {
+                'affiliated': 'عضو منتسب',
+                'non-affiliated': 'عضو غير منتسب',
+                'honorary': 'عضو فخري'
+            };
+            return types[type] || type;
+        }
+
+        async function loadMembers() {
+            if (!firebaseReady) return;
             
             try {
-                const response = await fetch(`${API_BASE_URL}/api/create_card`, {
-                    method: 'POST',
-                    body: formData
+                const { db, collection, getDocs } = window.firebaseServices;
+                const querySnapshot = await getDocs(collection(db, 'members'));
+                
+                const membersContainer = document.getElementById('membersContainer');
+                membersContainer.innerHTML = '';
+                
+                if (querySnapshot.empty) {
+                    membersContainer.innerHTML = '<p style="text-align: center; color: #666;">لا توجد بطاقات مُنشأة بعد</p>';
+                    return;
+                }
+                
+                querySnapshot.forEach((doc) => {
+                    const member = doc.data();
+                    const memberCard = createMemberCard(doc.id, member);
+                    membersContainer.appendChild(memberCard);
                 });
                 
-                const data = await response.json();
-                
-                if (data.success) {
-                    successDiv.textContent = data.message;
-                    successDiv.style.display = 'block';
-                    
-                    // عرض البطاقة
-                    document.getElementById('cardPreview').src = data.card_url;
-                    document.getElementById('downloadBtn').href = data.download_url;
-                    document.getElementById('resultSection').style.display = 'block';
-                    
-                    // إعادة تعيين النموذج
-                    document.getElementById('cardForm').reset();
-                } else {
-                    errorDiv.textContent = data.message;
-                    errorDiv.style.display = 'block';
-                }
             } catch (error) {
-                errorDiv.textContent = 'حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.';
-                errorDiv.style.display = 'block';
-            } finally {
-                // إعادة تفعيل الزر
-                createBtn.disabled = false;
-                createBtn.innerHTML = '<i class="fas fa-plus-circle"></i> إنشاء البطاقة';
+                console.error('Error loading members:', error);
+                showError('listError', 'حدث خطأ في تحميل قائمة الأعضاء');
             }
-        });
-
-        function logout() {
-            sessionStorage.removeItem('kaml_logged_in');
-            window.location.href = './login.html';
         }
+
+        function createMemberCard(id, member) {
+            const card = document.createElement('div');
+            card.className = 'member-card';
+            
+            card.innerHTML = `
+                <div class="member-info">
+                    <div><strong>الاسم:</strong> ${member.arabicName}</div>
+                    <div><strong>Name:</strong> ${member.englishName}</div>
+                    <div><strong>رقم العضوية:</strong> ${member.membershipNumber}</div>
+                    <div><strong>الرقم المدني:</strong> ${member.civilId}</div>
+                    <div><strong>الهاتف:</strong> ${member.phone}</div>
+                    <div><strong>البريد الإلكتروني:</strong> ${member.email}</div>
+                    <div><strong>نوع العضوية:</strong> ${getArabicMembershipType(member.membershipType)}</div>
+                    <div><strong>العنوان:</strong> ${member.address}</div>
+                </div>
+                <div class="member-actions">
+                    ${member.cardUrl ? `<button class="btn" onclick="window.open('${member.cardUrl}', '_blank')"><i class="fas fa-download"></i> تحميل البطاقة</button>` : ''}
+                    <button class="btn btn-danger" onclick="deleteMember('${id}')"><i class="fas fa-trash"></i> حذف</button>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        async function deleteMember(id) {
+            if (!confirm('هل أنت متأكد من حذف هذا العضو؟')) return;
+            
+            try {
+                const { db, doc, deleteDoc } = window.firebaseServices;
+                await deleteDoc(doc(db, 'members', id));
+                
+                showSuccess('listSuccess', 'تم حذف العضو بنجاح');
+                loadMembers(); // Reload the list
+                
+            } catch (error) {
+                console.error('Error deleting member:', error);
+                showError('listError', 'حدث خطأ في حذف العضو');
+            }
+        }
+
+        function showSection(sectionId) {
+            hideAllSections();
+            document.getElementById(sectionId).classList.add('active');
+            
+            if (sectionId === 'membersList') {
+                loadMembers();
+            }
+        }
+
+        function hideAllSections() {
+            document.querySelectorAll('.form-section, .members-list').forEach(section => {
+                section.classList.remove('active');
+            });
+        }
+
+        async function logout() {
+            if (!firebaseReady) return;
+            
+            try {
+                const { auth, signOut } = window.firebaseServices;
+                await signOut(auth);
+                window.location.href = './login.html';
+            } catch (error) {
+                console.error('Error signing out:', error);
+            }
+        }
+
+        function showError(elementId, message) {
+            const errorDiv = document.getElementById(elementId);
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(elementId, message) {
+            const successDiv = document.getElementById(elementId);
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Start the application
+        waitForFirebase();
     </script>
 </body>
 </html>
