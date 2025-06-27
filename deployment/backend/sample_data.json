@@ -1,0 +1,21 @@
+[
+  {
+    "name_arabic": "أحمد محمد العلي",
+    "name_english": "Ahmed Mohammed Al-Ali",
+    "membership_number": "KAML-2024-001",
+    "photo": "sample_photo1.jpg"
+  },
+  {
+    "name_arabic": "فاطمة سالم الخالد",
+    "name_english": "Fatima Salem Al-Khalid", 
+    "membership_number": "KAML-2024-002",
+    "photo": "sample_photo2.jpg"
+  },
+  {
+    "name_arabic": "محمد عبدالله الصباح",
+    "name_english": "Mohammed Abdullah Al-Sabah",
+    "membership_number": "KAML-2024-003", 
+    "photo": "sample_photo3.jpg"
+  }
+]
+

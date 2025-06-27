@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام بطاقات العضوية - الجمعية الكويتية للمختبرات الطبية</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #87CEEB 0%, #4682B4 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .header .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            background: #4682B4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 30px;
+        }
+
+        .header h1 {
+            color: #4682B4;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .tab.active {
+            background: linear-gradient(45deg, #4682B4, #87CEEB);
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background: #f8f9fa;
+        }
+
+        .content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4682B4;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #4682B4, #87CEEB);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .card-preview {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .card-preview img {
+            max-width: 100%;
+            height: auto;
+            border: 3px solid #4682B4;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .members-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            transition: background 0.3s;
+        }
+
+        .member-item:hover {
+            background: #f8f9fa;
+        }
+
+        .member-info h4 {
+            color: #4682B4;
+            margin-bottom: 5px;
+        }
+
+        .member-info p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .success-message {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .logout-btn {
+                position: static;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </button>
+            <div class="logo">
+                <i class="fas fa-microscope"></i>
+            </div>
+            <h1>نظام بطاقات العضوية</h1>
+            <p>الجمعية الكويتية للمختبرات الطبية</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('create')">
+                <i class="fas fa-plus-circle"></i> إنشاء بطاقة عضوية
+            </button>
+            <button class="tab" onclick="showTab('members')">
+                <i class="fas fa-users"></i> قائمة الأعضاء
+            </button>
+            <button class="tab" onclick="showTab('scanner')">
+                <i class="fas fa-qrcode"></i> ماسح الباركود
+            </button>
+        </div>
+
+        <div class="content">
+            <!-- قسم إنشاء البطاقة -->
+            <div id="createSection">
+                <h2 style="text-align: center; color: #4682B4; margin-bottom: 30px;">
+                    <i class="fas fa-id-card"></i> إنشاء بطاقة عضوية جديدة
+                </h2>
+                
+                <form id="cardForm">
+                    <div class="form-group">
+                        <label for="arabicName">الاسم بالعربية:</label>
+                        <input type="text" id="arabicName" name="arabicName" required 
+                               placeholder="مثال: أحمد محمد العلي">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="englishName">الاسم بالإنجليزية:</label>
+                        <input type="text" id="englishName" name="englishName" required 
+                               placeholder="Ahmed Mohammed Al-Ali">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="memberId">رقم العضوية:</label>
+                        <input type="text" id="memberId" name="memberId" required 
+                               placeholder="KAML-2024-001">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="photo">الصورة الشخصية (اختياري):</label>
+                        <input type="file" id="photo" name="photo" accept="image/*">
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <button type="submit" class="btn">
+                            <i class="fas fa-magic"></i> إنشاء البطاقة
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="error-message" id="createError"></div>
+                <div class="success-message" id="createSuccess"></div>
+                
+                <div class="card-preview" id="cardPreview" style="display: none;">
+                    <h3 style="color: #4682B4; margin-bottom: 15px;">معاينة البطاقة:</h3>
+                    <img id="cardImage" alt="بطاقة العضوية">
+                    <br><br>
+                    <button class="btn" onclick="downloadCard()">
+                        <i class="fas fa-download"></i> تحميل البطاقة
+                    </button>
+                </div>
+            </div>
+
+            <!-- قسم قائمة الأعضاء -->
+            <div id="membersSection" style="display: none;">
+                <h2 style="text-align: center; color: #4682B4; margin-bottom: 30px;">
+                    <i class="fas fa-users"></i> قائمة الأعضاء
+                </h2>
+                
+                <div class="members-list" id="membersList">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> جاري تحميل قائمة الأعضاء...
+                    </div>
+                </div>
+            </div>
+
+            <!-- قسم ماسح الباركود -->
+            <div id="scannerSection" style="display: none;">
+                <h2 style="text-align: center; color: #4682B4; margin-bottom: 30px;">
+                    <i class="fas fa-qrcode"></i> ماسح الباركود
+                </h2>
+                
+                <div style="text-align: center;">
+                    <p style="margin-bottom: 20px; color: #666;">
+                        يمكنك الوصول لماسح الباركود المتقدم من خلال الرابط التالي:
+                    </p>
+                    <a href="scanner.html" class="btn" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> فتح ماسح الباركود
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentCardData = null;
+
+        // التحقق من تسجيل الدخول عند تحميل الصفحة
+        window.onload = function() {
+            checkAuth();
+        };
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/check_auth');
+                const data = await response.json();
+                
+                if (!data.logged_in) {
+                    window.location.href = 'login.html';
+                }
+            } catch (error) {
+                console.error('خطأ في التحقق من تسجيل الدخول:', error);
+                window.location.href = 'login.html';
+            }
+        }
+
+        // تسجيل الخروج
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+                sessionStorage.removeItem('kaml_logged_in');
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('خطأ في تسجيل الخروج:', error);
+                window.location.href = 'login.html';
+            }
+        }
+
+        // تبديل التبويبات
+        function showTab(tabName) {
+            // إخفاء جميع الأقسام
+            document.getElementById('createSection').style.display = 'none';
+            document.getElementById('membersSection').style.display = 'none';
+            document.getElementById('scannerSection').style.display = 'none';
+            
+            // إزالة الفئة النشطة من جميع التبويبات
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // إظهار القسم المحدد وتفعيل التبويب
+            if (tabName === 'create') {
+                document.getElementById('createSection').style.display = 'block';
+                document.querySelectorAll('.tab')[0].classList.add('active');
+            } else if (tabName === 'members') {
+                document.getElementById('membersSection').style.display = 'block';
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                loadMembers();
+            } else if (tabName === 'scanner') {
+                document.getElementById('scannerSection').style.display = 'block';
+                document.querySelectorAll('.tab')[2].classList.add('active');
+            }
+        }
+
+        // إنشاء البطاقة
+        document.getElementById('cardForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('arabic_name', document.getElementById('arabicName').value);
+            formData.append('english_name', document.getElementById('englishName').value);
+            formData.append('member_id', document.getElementById('memberId').value);
+            
+            const photoFile = document.getElementById('photo').files[0];
+            if (photoFile) {
+                formData.append('photo', photoFile);
+            }
+            
+            try {
+                showMessage('createSuccess', 'جاري إنشاء البطاقة...', 'success');
+                
+                const response = await fetch('/api/create_card', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentCardData = data;
+                    document.getElementById('cardImage').src = data.card_url;
+                    document.getElementById('cardPreview').style.display = 'block';
+                    showMessage('createSuccess', 'تم إنشاء البطاقة بنجاح!', 'success');
+                    
+                    // مسح النموذج
+                    document.getElementById('cardForm').reset();
+                } else {
+                    showMessage('createError', data.message || 'حدث خطأ في إنشاء البطاقة', 'error');
+                }
+            } catch (error) {
+                console.error('خطأ في إنشاء البطاقة:', error);
+                showMessage('createError', 'حدث خطأ في الاتصال بالخادم', 'error');
+            }
+        });
+
+        // تحميل البطاقة
+        function downloadCard() {
+            if (currentCardData && currentCardData.member_id) {
+                // استخدام route التحميل المخصص
+                const downloadUrl = `/api/download_card/${currentCardData.member_id}`;
+                
+                // إنشاء رابط تحميل مؤقت
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = `card_${currentCardData.member_id}.png`;
+                link.style.display = 'none';
+                
+                // إضافة الرابط للصفحة وتفعيله ثم حذفه
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // إظهار رسالة نجاح
+                showMessage('createSuccess', 'تم تحميل البطاقة بنجاح!', 'success');
+            } else {
+                alert('لا توجد بطاقة للتحميل. يرجى إنشاء بطاقة أولاً.');
+            }
+        }
+
+        // تحميل قائمة الأعضاء
+        async function loadMembers() {
+            try {
+                const response = await fetch('/api/members');
+                const data = await response.json();
+                
+                const membersList = document.getElementById('membersList');
+                
+                if (data.success && data.members.length > 0) {
+                    membersList.innerHTML = '';
+                    data.members.forEach(member => {
+                        const memberDiv = document.createElement('div');
+                        memberDiv.className = 'member-item';
+                        memberDiv.innerHTML = `
+                            <div class="member-info">
+                                <h4>${member.arabic_name}</h4>
+                                <p>${member.english_name} - ${member.member_id}</p>
+                            </div>
+                            <button class="btn btn-secondary" onclick="downloadMemberCard('${member.member_id}')">
+                                <i class="fas fa-download"></i> تحميل البطاقة
+                            </button>
+                        `;
+                        membersList.appendChild(memberDiv);
+                    });
+                } else {
+                    membersList.innerHTML = '<div class="loading">لا توجد أعضاء مسجلين حتى الآن</div>';
+                }
+            } catch (error) {
+                console.error('خطأ في تحميل الأعضاء:', error);
+                document.getElementById('membersList').innerHTML = '<div class="loading">حدث خطأ في تحميل قائمة الأعضاء</div>';
+            }
+        }
+
+        // تحميل بطاقة عضو محدد
+        async function downloadMemberCard(memberId) {
+            try {
+                const response = await fetch(`/api/member_card/${memberId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const link = document.createElement('a');
+                    link.href = data.card_url;
+                    link.download = `card_${memberId}.png`;
+                    link.click();
+                } else {
+                    alert('حدث خطأ في تحميل البطاقة');
+                }
+            } catch (error) {
+                console.error('خطأ في تحميل البطاقة:', error);
+                alert('حدث خطأ في تحميل البطاقة');
+            }
+        }
+
+        // عرض الرسائل
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            const otherElement = type === 'success' ? 
+                document.getElementById(elementId.replace('Success', 'Error')) : 
+                document.getElementById(elementId.replace('Error', 'Success'));
+            
+            otherElement.style.display = 'none';
+            element.textContent = message;
+            element.style.display = 'block';
+            
+            if (type === 'success') {
+                setTimeout(() => {
+                    element.style.display = 'none';
+                }, 5000);
+            }
+        }
+    </script>
+</body>
+</html>
+
