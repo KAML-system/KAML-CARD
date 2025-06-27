@@ -57,7 +57,7 @@
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            max-width: 800px;
+            max-width: 600px;
             margin: 0 auto;
         }
 
@@ -182,191 +182,86 @@
             text-align: center;
         }
 
-        /* New Card Design - Matching the Template */
         .membership-card {
-            width: 600px;
-            height: 380px;
-            background: white;
+            width: 400px;
+            height: 250px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             border-radius: 15px;
+            padding: 20px;
+            color: white;
+            font-family: Arial, sans-serif;
+            position: relative;
             margin: 20px auto;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            overflow: hidden;
-            position: relative;
-            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .card-content {
+            flex: 1;
         }
 
         .card-header {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            padding: 20px;
             text-align: center;
-            position: relative;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .card-header .header-text {
-            flex: 1;
+            margin-bottom: 15px;
         }
 
         .card-header h3 {
-            font-size: 18px;
             margin: 0;
-            font-weight: bold;
+            font-size: 14px;
         }
 
         .card-header h4 {
+            margin: 5px 0;
+            font-size: 12px;
+        }
+
+        .card-details {
+            text-align: right;
+        }
+
+        .card-details p {
+            margin: 8px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .card-details .english-name {
             font-size: 14px;
-            margin: 5px 0 0 0;
             font-weight: normal;
-            opacity: 0.9;
         }
 
-        .card-logo {
-            width: 50px;
-            height: 50px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 20px;
-        }
-
-        .card-logo img {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-        }
-
-        .card-body {
-            padding: 30px;
-            height: 220px;
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            background: #f8f9fa;
-        }
-
-        .qr-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .qr-code {
-            width: 120px;
-            height: 120px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .qr-placeholder {
-            width: 100px;
-            height: 100px;
-            background: #1e3c72;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 12px;
-            text-align: center;
-            border-radius: 4px;
-        }
-
-        .scan-text {
-            font-size: 12px;
-            color: #666;
-            text-align: center;
-        }
-
-        .member-info {
-            flex: 1;
-            text-align: center;
-            color: #333;
-        }
-
-        .member-name-ar {
-            font-size: 28px;
-            font-weight: bold;
-            color: #1e3c72;
-            margin-bottom: 8px;
-        }
-
-        .member-name-en {
-            font-size: 18px;
-            color: #666;
-            margin-bottom: 15px;
-        }
-
-        .membership-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ff6b35;
-            margin-bottom: 15px;
-        }
-
-        .membership-label {
+        .card-details .membership-number {
             font-size: 14px;
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        .dates-info {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            font-size: 12px;
-            color: #28a745;
-        }
-
-        .member-photo {
-            width: 120px;
-            height: 150px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .member-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            font-weight: normal;
         }
 
         .card-footer {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            padding: 12px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 12px;
-            height: 80px;
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+            right: 20px;
+            text-align: center;
+            font-size: 10px;
+            opacity: 0.8;
         }
 
-        .valid-member {
+        .card-photo {
+            width: 100px;
+            height: 120px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-weight: bold;
+            justify-content: center;
         }
 
-        .serial-info {
-            text-align: right;
-            opacity: 0.9;
+        .card-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .buttons-container {
@@ -389,30 +284,15 @@
 
             .membership-card {
                 width: 100%;
-                max-width: 500px;
+                max-width: 350px;
                 height: auto;
-                min-height: 350px;
-            }
-
-            .card-body {
+                min-height: 200px;
                 flex-direction: column;
-                height: auto;
-                padding: 20px;
-                gap: 20px;
+                text-align: center;
             }
 
-            .member-info {
-                order: 1;
-            }
-
-            .qr-section {
-                order: 2;
-            }
-
-            .member-photo {
-                order: 3;
-                width: 100px;
-                height: 120px;
+            .card-details {
+                text-align: center;
             }
         }
     </style>
@@ -444,7 +324,7 @@
 
                 <div class="form-group">
                     <label for="membershipNumber">رقم العضوية:</label>
-                    <input type="text" id="membershipNumber" name="membershipNumber" required placeholder="655">
+                    <input type="text" id="membershipNumber" name="membershipNumber" required placeholder="KAML-2024-001">
                 </div>
 
                 <div class="form-group">
@@ -467,7 +347,6 @@
         <div class="card-preview" id="cardPreview"></div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script>
         // Check if user is logged in (simple check)
         if (!localStorage.getItem('isLoggedIn')) {
@@ -522,110 +401,35 @@
         }
 
         function generateCard(memberData) {
-            const issueDate = new Date(memberData.createdAt);
             const expiryDate = new Date(memberData.createdAt);
             expiryDate.setFullYear(expiryDate.getFullYear() + 1);
             
-            // Generate unique serial number
-            const serial = 'CAE' + Math.random().toString(36).substr(2, 5).toUpperCase();
-            const signature = Math.random().toString(36).substr(2, 10).toUpperCase();
-            
             const cardHtml = `
                 <div class="membership-card">
-                    <div class="card-header">
-                        <div class="header-text">
-                            <h3>Kuwait Association for Medical Laboratories</h3>
-                            <h4>الجمعية الكويتية للمختبرات الطبية</h4>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <h3>الجمعية الكويتية للمختبرات الطبية</h3>
+                            <h4>Kuwait Association for Medical Laboratories</h4>
                         </div>
-                        <div class="card-logo">
-                            <img src="./logo.jpeg" alt="KAML Logo">
+                        
+                        <div class="card-details">
+                            <p>${memberData.arabicName}</p>
+                            <p class="english-name">${memberData.englishName}</p>
+                            <p class="membership-number">رقم العضوية: ${memberData.membershipNumber}</p>
+                        </div>
+                        
+                        <div class="card-footer">
+                            صالحة حتى: ${expiryDate.toLocaleDateString('ar-SA')}
                         </div>
                     </div>
                     
-                    <div class="card-body">
-                        <div class="qr-section">
-                            <div class="qr-code" id="qrCodeContainer">
-                                <div class="qr-placeholder">QR CODE</div>
-                            </div>
-                            <div class="scan-text">📱 Scan for verification</div>
-                        </div>
-                        
-                        <div class="member-info">
-                            <div class="member-name-ar">${memberData.arabicName}</div>
-                            <div class="member-name-en">${memberData.englishName}</div>
-                            <div class="membership-number">${memberData.membershipNumber}</div>
-                            <div class="membership-label">Membership No:</div>
-                            <div class="dates-info">
-                                <div>📅 Issue: ${issueDate.toLocaleDateString('en-GB')}</div>
-                                <div>📅 Expiry: ${expiryDate.toLocaleDateString('en-GB')}</div>
-                            </div>
-                        </div>
-                        
-                        <div class="member-photo">
-                            <img src="${memberData.photoURL}" alt="صورة العضو">
-                        </div>
-                    </div>
-                    
-                    <div class="card-footer">
-                        <div class="valid-member">
-                            ✅✅ Valid Member
-                        </div>
-                        <div class="serial-info">
-                            📋 Serial: ${serial} | Signature: ${signature}...
-                        </div>
+                    <div class="card-photo">
+                        <img src="${memberData.photoURL}" alt="صورة العضو">
                     </div>
                 </div>
             `;
             
             document.getElementById('cardPreview').innerHTML = cardHtml;
-            
-            // Generate QR Code after a short delay to ensure DOM is ready
-            setTimeout(() => {
-                generateQRCode(memberData, issueDate, expiryDate, serial);
-            }, 200);
-        }
-
-        function generateQRCode(memberData, issueDate, expiryDate, serial) {
-            const qrData = JSON.stringify({
-                name: memberData.arabicName,
-                nameEn: memberData.englishName,
-                membershipNumber: memberData.membershipNumber,
-                issueDate: issueDate.toISOString(),
-                expiryDate: expiryDate.toISOString(),
-                serial: serial,
-                organization: "Kuwait Association for Medical Laboratories"
-            });
-            
-            const qrContainer = document.getElementById('qrCodeContainer');
-            if (qrContainer) {
-                // Clear the placeholder
-                qrContainer.innerHTML = '';
-                
-                // Generate QR code using canvas
-                const canvas = document.createElement('canvas');
-                qrContainer.appendChild(canvas);
-                
-                if (typeof QRCode !== 'undefined') {
-                    QRCode.toCanvas(canvas, qrData, {
-                        width: 100,
-                        height: 100,
-                        margin: 1,
-                        color: {
-                            dark: '#1e3c72',
-                            light: '#ffffff'
-                        }
-                    }, function (error) {
-                        if (error) {
-                            console.error('QR Code generation error:', error);
-                            qrContainer.innerHTML = '<div class="qr-placeholder">QR ERROR</div>';
-                        }
-                    });
-                } else {
-                    // Fallback if QRCode library doesn't load
-                    console.error('QRCode library not loaded');
-                    qrContainer.innerHTML = '<div class="qr-placeholder">QR CODE<br>LIBRARY<br>ERROR</div>';
-                }
-            }
         }
 
         function showMessage(text, type) {
