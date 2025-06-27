@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول - نظام بطاقات العضوية KAML</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>تسجيل الدخول - نظام بطاقات العضوية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -14,47 +14,40 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #87CEEB 0%, #4682B4 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #333;
+            padding: 20px;
         }
 
         .login-container {
             background: white;
-            padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
             max-width: 400px;
+            width: 100%;
             text-align: center;
         }
 
         .logo {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            background: #4682B4;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 30px;
+            font-size: 3rem;
+            color: #4682B4;
+            margin-bottom: 20px;
         }
 
         h1 {
-            color: #4682B4;
+            color: #2c3e50;
             margin-bottom: 10px;
-            font-size: 28px;
+            font-size: 1.8rem;
         }
 
         .subtitle {
-            color: #666;
+            color: #7f8c8d;
             margin-bottom: 30px;
-            font-size: 16px;
+            font-size: 1rem;
         }
 
         .form-group {
@@ -62,45 +55,52 @@
             text-align: right;
         }
 
-        label {
+        .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #555;
+            color: #2c3e50;
             font-weight: 600;
         }
 
-        input[type="text"], input[type="password"] {
+        .form-group input {
             width: 100%;
-            padding: 15px;
+            padding: 12px 15px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-            direction: ltr;
-            text-align: left;
+            font-size: 1rem;
+            transition: all 0.3s;
+            text-align: right;
         }
 
-        input[type="text"]:focus, input[type="password"]:focus {
+        .form-group input:focus {
             outline: none;
             border-color: #4682B4;
+            box-shadow: 0 0 0 3px rgba(70, 130, 180, 0.1);
         }
 
         .login-btn {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(45deg, #4682B4, #87CEEB);
+            background: linear-gradient(135deg, #4682B4 0%, #5a9fd4 100%);
             color: white;
             border: none;
+            padding: 15px;
             border-radius: 10px;
-            font-size: 18px;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s;
             margin-bottom: 20px;
         }
 
         .login-btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(70, 130, 180, 0.3);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .scanner-link {
@@ -159,6 +159,27 @@
             color: #666;
         }
 
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4682B4;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         @media (max-width: 480px) {
             .login-container {
                 margin: 20px;
@@ -175,84 +196,159 @@
         <h1>نظام بطاقات العضوية</h1>
         <p class="subtitle">الجمعية الكويتية للمختبرات الطبية</p>
         
-        <div class="error-message" id="errorMessage"></div>
-        <div class="success-message" id="successMessage"></div>
-        
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="username">اسم المستخدم:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="password">كلمة المرور:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            
-            <button type="submit" class="login-btn">
-                <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
-            </button>
-        </form>
-        
-        <div class="divider">
-            <span>أو</span>
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>جاري تحميل النظام...</p>
         </div>
-        
-        <a href="./scanner.html" class="scanner-link">
-            <i class="fas fa-qrcode"></i> ماسح الباركود
-        </a>
+
+        <div id="loginForm" style="display: none;">
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+            
+            <form id="authForm">
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني:</label>
+                    <input type="email" id="email" name="email" required placeholder="admin@kaml.org.kw">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">كلمة المرور:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <button type="submit" class="login-btn" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                </button>
+            </form>
+            
+            <div class="divider">
+                <span>أو</span>
+            </div>
+            
+            <a href="./scanner.html" class="scanner-link">
+                <i class="fas fa-qrcode"></i> ماسح الباركود
+            </a>
+        </div>
     </div>
 
+    <script type="module" src="./firebase-config.js"></script>
     <script>
-        // ⚠️ تحديث هذا الرابط بعد نشر الجزء الخلفي
-        const API_BASE_URL = 'https://your-backend-url.herokuapp.com'; // أو رابط الخادم الخاص بك
-        
-        // للاختبار المحلي، استخدم:
-        // const API_BASE_URL = 'http://localhost:5000';
-        
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        let firebaseReady = false;
+
+        // Wait for Firebase to load
+        function waitForFirebase() {
+            if (window.firebaseServices) {
+                firebaseReady = true;
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('loginForm').style.display = 'block';
+                setupAuthListeners();
+            } else {
+                setTimeout(waitForFirebase, 100);
+            }
+        }
+
+        function setupAuthListeners() {
+            const { auth, onAuthStateChanged } = window.firebaseServices;
+            
+            // Check if user is already logged in
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    showSuccess('تم تسجيل الدخول بنجاح!');
+                    setTimeout(() => {
+                        window.location.href = './admin.html';
+                    }, 1500);
+                }
+            });
+
+            // Handle form submission
+            document.getElementById('authForm').addEventListener('submit', handleLogin);
+        }
+
+        async function handleLogin(e) {
             e.preventDefault();
             
-            const username = document.getElementById('username').value;
+            if (!firebaseReady) {
+                showError('النظام غير جاهز بعد، يرجى المحاولة مرة أخرى');
+                return;
+            }
+
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+
+            // Disable button and show loading
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري تسجيل الدخول...';
+
+            try {
+                const { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword } = window.firebaseServices;
+                
+                // Try to sign in first
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    showSuccess('تم تسجيل الدخول بنجاح!');
+                } catch (signInError) {
+                    // If sign in fails, check if it's a default admin and create account
+                    const defaultAdmin = window.defaultAdmins.find(admin => 
+                        admin.email === email && admin.password === password
+                    );
+                    
+                    if (defaultAdmin) {
+                        try {
+                            await createUserWithEmailAndPassword(auth, email, password);
+                            showSuccess('تم إنشاء الحساب وتسجيل الدخول بنجاح!');
+                        } catch (createError) {
+                            if (createError.code === 'auth/email-already-in-use') {
+                                showError('البريد الإلكتروني مستخدم بالفعل، يرجى التحقق من كلمة المرور');
+                            } else {
+                                showError('خطأ في إنشاء الحساب: ' + createError.message);
+                            }
+                        }
+                    } else {
+                        if (signInError.code === 'auth/user-not-found') {
+                            showError('المستخدم غير موجود');
+                        } else if (signInError.code === 'auth/wrong-password') {
+                            showError('كلمة المرور غير صحيحة');
+                        } else if (signInError.code === 'auth/invalid-email') {
+                            showError('البريد الإلكتروني غير صحيح');
+                        } else {
+                            showError('خطأ في تسجيل الدخول: ' + signInError.message);
+                        }
+                    }
+                }
+            } catch (error) {
+                showError('حدث خطأ غير متوقع: ' + error.message);
+            } finally {
+                // Re-enable button
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> تسجيل الدخول';
+            }
+        }
+
+        function showError(message) {
             const errorDiv = document.getElementById('errorMessage');
             const successDiv = document.getElementById('successMessage');
             
-            // إخفاء الرسائل السابقة
-            errorDiv.style.display = 'none';
             successDiv.style.display = 'none';
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
             
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ username, password })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    successDiv.textContent = data.message;
-                    successDiv.style.display = 'block';
-                    
-                    // حفظ حالة تسجيل الدخول
-                    sessionStorage.setItem('kaml_logged_in', 'true');
-                    
-                    // الانتقال للصفحة الرئيسية بعد ثانيتين
-                    setTimeout(() => {
-                        window.location.href = './index.html';
-                    }, 2000);
-                } else {
-                    errorDiv.textContent = data.message;
-                    errorDiv.style.display = 'block';
-                }
-            } catch (error) {
-                errorDiv.textContent = 'حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.';
-                errorDiv.style.display = 'block';
-            }
-        });
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            
+            errorDiv.style.display = 'none';
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        // Start waiting for Firebase
+        waitForFirebase();
     </script>
 </body>
 </html>
