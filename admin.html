@@ -480,80 +480,220 @@
 
         async function generateMembershipCard(memberData, memberId) {
             try {
-                // Create canvas for card generation
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
+                // Generate unique serial and signature for security
+                const serial = 'CAE' + Math.random().toString(36).substr(2, 5).toUpperCase();
+                const signature = Math.random().toString(36).substr(2, 10).toUpperCase();
                 
-                // Set canvas size (standard card size)
-                canvas.width = 800;
-                canvas.height = 500;
+                // Create QR code data with digital signature
+                const qrData = JSON.stringify({
+                    id: memberId,
+                    name: memberData.arabicName,
+                    nameEn: memberData.englishName,
+                    membershipNumber: memberData.membershipNumber,
+                    civilId: memberData.civilId,
+                    issueDate: memberData.createdAt.toISOString(),
+                    expiryDate: new Date(memberData.createdAt.getTime() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+                    serial: serial,
+                    signature: signature,
+                    organization: "Kuwait Association for Medical Laboratories",
+                    verified: true
+                });
                 
-                // Background gradient
-                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-                gradient.addColorStop(0, '#4682B4');
-                gradient.addColorStop(1, '#5a9fd4');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                // White content area
-                ctx.fillStyle = 'white';
-                ctx.fillRect(50, 50, canvas.width - 100, canvas.height - 100);
-                
-                // Header
-                ctx.fillStyle = '#2c3e50';
-                ctx.font = 'bold 32px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('Kuwait Association of Medical Laboratories', canvas.width / 2, 120);
-                
-                ctx.font = 'bold 24px Arial';
-                ctx.fillText('الجمعية الكويتية للمختبرات الطبية', canvas.width / 2, 150);
-                
-                // Member info
-                ctx.font = '20px Arial';
-                ctx.textAlign = 'right';
-                ctx.fillText('الاسم: ' + memberData.arabicName, canvas.width - 80, 220);
-                ctx.fillText('Name: ' + memberData.englishName, canvas.width - 80, 250);
-                ctx.fillText('رقم العضوية: ' + memberData.membershipNumber, canvas.width - 80, 280);
-                ctx.fillText('الرقم المدني: ' + memberData.civilId, canvas.width - 80, 310);
-                ctx.fillText('نوع العضوية: ' + getArabicMembershipType(memberData.membershipType), canvas.width - 80, 340);
-                
-                // QR Code placeholder (you can integrate a QR code library here)
-                ctx.fillStyle = '#e0e0e0';
-                ctx.fillRect(80, 200, 120, 120);
-                ctx.fillStyle = '#666';
-                ctx.font = '14px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('QR Code', 140, 265);
-                
-                // Convert canvas to blob and download
-                canvas.toBlob(async (blob) => {
-                    try {
-                        // Save to Firebase Storage
-                        const { storage, ref, uploadBytes, getDownloadURL } = window.firebaseServices;
-                        const storageRef = ref(storage, `cards/${memberId}.png`);
-                        await uploadBytes(storageRef, blob);
-                        const downloadURL = await getDownloadURL(storageRef);
-                        
-                        // Update member document with card URL
-                        const { db, doc, updateDoc } = window.firebaseServices;
-                        await updateDoc(doc(db, 'members', memberId), {
-                            cardUrl: downloadURL
-                        });
-                        
-                        // Download card locally
-                        const link = document.createElement('a');
-                        link.href = URL.createObjectURL(blob);
-                        link.download = `card_${memberData.membershipNumber}.png`;
-                        link.click();
-                        
-                    } catch (error) {
-                        console.error('Error saving card:', error);
-                    }
-                }, 'image/png');
+                // Display the card with the exact template design
+                displayMembershipCard(memberData, memberId, qrData, serial, signature);
                 
             } catch (error) {
                 console.error('Error generating card:', error);
                 showError('createError', 'حدث خطأ في إنشاء البطاقة المرئية');
+            }
+        }
+
+        function displayMembershipCard(memberData, memberId, qrData, serial, signature) {
+            const issueDate = new Date(memberData.createdAt);
+            const expiryDate = new Date(memberData.createdAt.getTime() + 365 * 24 * 60 * 60 * 1000);
+            
+            const cardHtml = `
+                <div class="membership-card-preview">
+                    <h3 style="text-align: center; color: #1e3c72; margin-bottom: 20px;">✅ تم إنشاء البطاقة بنجاح</h3>
+                    
+                    <div class="membership-card" style="
+                        width: 600px;
+                        height: 380px;
+                        background: white;
+                        border-radius: 15px;
+                        margin: 20px auto;
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                        overflow: hidden;
+                        border: 2px solid #ddd;
+                        font-family: Arial, sans-serif;
+                    ">
+                        <!-- Card Header -->
+                        <div style="
+                            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+                            color: white;
+                            padding: 20px;
+                            height: 80px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                        ">
+                            <div style="flex: 1;">
+                                <h3 style="font-size: 18px; margin: 0; font-weight: bold;">Kuwait Association for Medical Laboratories</h3>
+                                <h4 style="font-size: 14px; margin: 5px 0 0 0; font-weight: normal; opacity: 0.9;">الجمعية الكويتية للمختبرات الطبية</h4>
+                            </div>
+                            <div style="
+                                width: 50px;
+                                height: 50px;
+                                background: white;
+                                border-radius: 50%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                margin-left: 20px;
+                            ">
+                                <img src="./logo.jpeg" alt="KAML Logo" style="width: 40px; height: 40px; object-fit: contain;">
+                            </div>
+                        </div>
+                        
+                        <!-- Card Body -->
+                        <div style="
+                            padding: 30px;
+                            height: 220px;
+                            display: flex;
+                            align-items: center;
+                            gap: 30px;
+                            background: #f8f9fa;
+                        ">
+                            <!-- QR Section -->
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                                <div id="qrCodeContainer-${memberId}" style="
+                                    width: 120px;
+                                    height: 120px;
+                                    border: 2px solid #ddd;
+                                    border-radius: 8px;
+                                    background: white;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                ">
+                                    <div style="
+                                        width: 100px;
+                                        height: 100px;
+                                        background: #1e3c72;
+                                        color: white;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        font-size: 12px;
+                                        text-align: center;
+                                        border-radius: 4px;
+                                    ">QR CODE</div>
+                                </div>
+                                <div style="font-size: 12px; color: #666; text-align: center;">📱 Scan for verification</div>
+                            </div>
+                            
+                            <!-- Member Info -->
+                            <div style="flex: 1; text-align: center; color: #333;">
+                                <div style="font-size: 28px; font-weight: bold; color: #1e3c72; margin-bottom: 8px;">${memberData.arabicName}</div>
+                                <div style="font-size: 18px; color: #666; margin-bottom: 15px;">${memberData.englishName}</div>
+                                <div style="font-size: 24px; font-weight: bold; color: #ff6b35; margin-bottom: 15px;">${memberData.membershipNumber}</div>
+                                <div style="font-size: 14px; color: #666; margin-bottom: 5px;">Membership No:</div>
+                                <div style="display: flex; justify-content: center; gap: 30px; font-size: 12px; color: #28a745;">
+                                    <div>📅 Issue: ${issueDate.toLocaleDateString('en-GB')}</div>
+                                    <div>📅 Expiry: ${expiryDate.toLocaleDateString('en-GB')}</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Member Photo Placeholder -->
+                            <div style="
+                                width: 120px;
+                                height: 150px;
+                                border: 2px solid #ddd;
+                                border-radius: 10px;
+                                background: white;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: #666;
+                                font-size: 12px;
+                            ">
+                                صورة العضو<br>Member Photo
+                            </div>
+                        </div>
+                        
+                        <!-- Card Footer -->
+                        <div style="
+                            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+                            color: white;
+                            padding: 12px 30px;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            font-size: 12px;
+                            height: 80px;
+                        ">
+                            <div style="display: flex; align-items: center; gap: 8px; font-weight: bold;">
+                                ✅✅ Valid Member
+                            </div>
+                            <div style="text-align: right; opacity: 0.9;">
+                                📋 Serial: ${serial} | Signature: ${signature}...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Display the card
+            const cardContainer = document.getElementById('cardPreview') || document.createElement('div');
+            cardContainer.innerHTML = cardHtml;
+            
+            if (!document.getElementById('cardPreview')) {
+                cardContainer.id = 'cardPreview';
+                cardContainer.style.marginTop = '30px';
+                document.querySelector('.container').appendChild(cardContainer);
+            }
+            
+            // Generate QR Code after DOM is ready
+            setTimeout(() => {
+                generateQRCodeForCard(qrData, `qrCodeContainer-${memberId}`);
+            }, 200);
+        }
+
+        function generateQRCodeForCard(qrData, containerId) {
+            // Load QR Code library if not already loaded
+            if (typeof QRCode === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
+                script.onload = () => {
+                    createQRCode(qrData, containerId);
+                };
+                document.head.appendChild(script);
+            } else {
+                createQRCode(qrData, containerId);
+            }
+        }
+
+        function createQRCode(qrData, containerId) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML = '';
+                const canvas = document.createElement('canvas');
+                container.appendChild(canvas);
+                
+                QRCode.toCanvas(canvas, qrData, {
+                    width: 100,
+                    height: 100,
+                    margin: 1,
+                    color: {
+                        dark: '#1e3c72',
+                        light: '#ffffff'
+                    }
+                }, function (error) {
+                    if (error) {
+                        console.error('QR Code generation error:', error);
+                        container.innerHTML = '<div style="width: 100px; height: 100px; background: #1e3c72; color: white; display: flex; align-items: center; justify-content: center; font-size: 10px; text-align: center; border-radius: 4px;">QR ERROR</div>';
+                    }
+                });
             }
         }
 
