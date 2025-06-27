@@ -198,12 +198,18 @@
             <span>أو</span>
         </div>
         
-        <a href="scanner.html" class="scanner-link">
+        <a href="./scanner.html" class="scanner-link">
             <i class="fas fa-qrcode"></i> ماسح الباركود
         </a>
     </div>
 
     <script>
+        // ⚠️ تحديث هذا الرابط بعد نشر الجزء الخلفي
+        const API_BASE_URL = 'https://your-backend-url.herokuapp.com'; // أو رابط الخادم الخاص بك
+        
+        // للاختبار المحلي، استخدم:
+        // const API_BASE_URL = 'http://localhost:5000';
+        
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -217,7 +223,7 @@
             successDiv.style.display = 'none';
             
             try {
-                const response = await fetch('/api/login', {
+                const response = await fetch(`${API_BASE_URL}/api/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -236,7 +242,7 @@
                     
                     // الانتقال للصفحة الرئيسية بعد ثانيتين
                     setTimeout(() => {
-                        window.location.href = '/';
+                        window.location.href = './index.html';
                     }, 2000);
                 } else {
                     errorDiv.textContent = data.message;

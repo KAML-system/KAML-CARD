@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة البطاقات - الجمعية الكويتية للمختبرات الطبية</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="./config.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #87CEEB 0%, #4682B4 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .header .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            background: #4682B4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 30px;
+        }
+
+        .header h1 {
+            color: #4682B4;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .card-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input[type="text"], input[type="file"], select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #4682B4;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .create-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #4682B4, #87CEEB);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .create-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .create-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none;
+            text-align: center;
+        }
+
+        .card-preview {
+            max-width: 100%;
+            height: auto;
+            border: 3px solid #4682B4;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            margin: 10px;
+            transition: transform 0.2s;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .navigation {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .nav-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 0 10px;
+            transition: background 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #5a6268;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-microscope"></i>
+            </div>
+            <h1>إدارة بطاقات العضوية</h1>
+            <p>الجمعية الكويتية للمختبرات الطبية</p>
+        </div>
+
+        <div class="card-form">
+            <h2 style="color: #4682B4; margin-bottom: 20px; text-align: center;">
+                <i class="fas fa-id-card"></i>
+                إنشاء بطاقة عضوية جديدة
+            </h2>
+
+            <form id="cardForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nameEn">الاسم بالإنجليزية:</label>
+                        <input type="text" id="nameEn" name="nameEn" required placeholder="John Doe">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="nameAr">الاسم بالعربية:</label>
+                        <input type="text" id="nameAr" name="nameAr" required placeholder="جون دو">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="memberId">رقم العضوية:</label>
+                        <input type="text" id="memberId" name="memberId" required placeholder="001">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="organization">المؤسسة:</label>
+                        <input type="text" id="organization" name="organization" placeholder="مختبر الكويت الطبي">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="photo">الصورة الشخصية:</label>
+                    <input type="file" id="photo" name="photo" accept="image/*" required>
+                </div>
+
+                <div class="error-message" id="errorMessage"></div>
+                <div class="success-message" id="successMessage"></div>
+
+                <button type="submit" class="create-btn" id="createBtn">
+                    <i class="fas fa-plus-circle"></i>
+                    إنشاء البطاقة
+                </button>
+            </form>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <h3 style="color: #4682B4; margin-bottom: 20px;">
+                <i class="fas fa-check-circle"></i>
+                تم إنشاء البطاقة بنجاح!
+            </h3>
+            <img id="cardPreview" class="card-preview" alt="معاينة البطاقة">
+            <br>
+            <a href="#" id="downloadBtn" class="download-btn">
+                <i class="fas fa-download"></i>
+                تحميل البطاقة
+            </a>
+        </div>
+
+        <div class="navigation">
+            <a href="./scanner.html" class="nav-btn">
+                <i class="fas fa-qrcode"></i>
+                ماسح الباركود
+            </a>
+            <a href="./index.html" class="nav-btn">
+                <i class="fas fa-home"></i>
+                الصفحة الرئيسية
+            </a>
+            <a href="#" class="nav-btn logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                تسجيل الخروج
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // التحقق من تسجيل الدخول
+        if (!sessionStorage.getItem('kaml_logged_in')) {
+            window.location.href = './login.html';
+        }
+
+        // ⚠️ تحديث هذا الرابط بعد نشر الجزء الخلفي
+        const API_BASE_URL = 'https://your-backend-url.herokuapp.com'; // أو رابط الخادم الخاص بك
+        
+        // للاختبار المحلي، استخدم:
+        // const API_BASE_URL = 'http://localhost:5000';
+
+        document.getElementById('cardForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('name_en', document.getElementById('nameEn').value);
+            formData.append('name_ar', document.getElementById('nameAr').value);
+            formData.append('member_id', document.getElementById('memberId').value);
+            formData.append('organization', document.getElementById('organization').value);
+            formData.append('photo', document.getElementById('photo').files[0]);
+            
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            const createBtn = document.getElementById('createBtn');
+            
+            // إخفاء الرسائل السابقة
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+            document.getElementById('resultSection').style.display = 'none';
+            
+            // تعطيل الزر أثناء المعالجة
+            createBtn.disabled = true;
+            createBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإنشاء...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/create_card`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    successDiv.textContent = data.message;
+                    successDiv.style.display = 'block';
+                    
+                    // عرض البطاقة
+                    document.getElementById('cardPreview').src = data.card_url;
+                    document.getElementById('downloadBtn').href = data.download_url;
+                    document.getElementById('resultSection').style.display = 'block';
+                    
+                    // إعادة تعيين النموذج
+                    document.getElementById('cardForm').reset();
+                } else {
+                    errorDiv.textContent = data.message;
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.';
+                errorDiv.style.display = 'block';
+            } finally {
+                // إعادة تفعيل الزر
+                createBtn.disabled = false;
+                createBtn.innerHTML = '<i class="fas fa-plus-circle"></i> إنشاء البطاقة';
+            }
+        });
+
+        function logout() {
+            sessionStorage.removeItem('kaml_logged_in');
+            window.location.href = './login.html';
+        }
+    </script>
+</body>
+</html>
+

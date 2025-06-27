@@ -26,7 +26,7 @@
 1. اذهب إلى [GitHub.com](https://github.com)
 2. سجل دخول أو أنشئ حساب جديد
 3. انقر على **"New repository"**
-4. اسم المشروع: `kaml-membership-system`
+4. اسم المشروع: `kaml-card`
 5. اجعله **Public**
 6. أضف **README file**
 7. انقر **"Create repository"**
@@ -45,8 +45,8 @@
 
 #### الطريقة الثانية: عبر Git
 ```bash
-git clone https://github.com/YOUR_USERNAME/kaml-membership-system.git
-cd kaml-membership-system
+git clone https://github.com/YOUR_USERNAME/kaml-card.git
+cd kaml-card
 # انسخ الملفات هنا
 git add .
 git commit -m "إضافة نظام إدارة بطاقات العضوية"
@@ -66,7 +66,7 @@ git push origin main
 
 بعد بضع دقائق، سيكون موقعك متاحاً على:
 ```
-https://YOUR_USERNAME.github.io/kaml-membership-system/
+https://YOUR_USERNAME.github.io/kaml-card/
 ```
 
 ---
