@@ -207,8 +207,8 @@
             
             <form id="authForm">
                 <div class="form-group">
-                    <label for="username">اسم المستخدم:</label>
-                    <input type="text" id="username" name="username" required placeholder="أدخل اسم المستخدم">
+                    <label for="email">البريد الإلكتروني:</label>
+                    <input type="email" id="email" name="email" required placeholder="admin@kaml.org.kw">
                 </div>
                 
                 <div class="form-group">
@@ -272,7 +272,7 @@
                 return;
             }
 
-            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const loginBtn = document.getElementById('loginBtn');
 
@@ -281,9 +281,6 @@
             loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري تسجيل الدخول...';
 
             try {
-                // Convert username to email for Firebase
-                const email = convertUsernameToEmail(username);
-                
                 const { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword } = window.firebaseServices;
                 
                 // Try to sign in first
@@ -293,7 +290,7 @@
                 } catch (signInError) {
                     // If sign in fails, check if it's a default admin and create account
                     const defaultAdmin = window.defaultAdmins.find(admin => 
-                        admin.username === username && admin.password === password
+                        admin.email === email && admin.password === password
                     );
                     
                     if (defaultAdmin) {
@@ -302,18 +299,18 @@
                             showSuccess('تم إنشاء الحساب وتسجيل الدخول بنجاح!');
                         } catch (createError) {
                             if (createError.code === 'auth/email-already-in-use') {
-                                showError('المستخدم موجود بالفعل، يرجى التحقق من كلمة المرور');
+                                showError('البريد الإلكتروني مستخدم بالفعل، يرجى التحقق من كلمة المرور');
                             } else {
                                 showError('خطأ في إنشاء الحساب: ' + createError.message);
                             }
                         }
                     } else {
                         if (signInError.code === 'auth/user-not-found') {
-                            showError('اسم المستخدم غير موجود');
+                            showError('المستخدم غير موجود');
                         } else if (signInError.code === 'auth/wrong-password') {
                             showError('كلمة المرور غير صحيحة');
                         } else if (signInError.code === 'auth/invalid-email') {
-                            showError('اسم المستخدم غير صحيح');
+                            showError('البريد الإلكتروني غير صحيح');
                         } else {
                             showError('خطأ في تسجيل الدخول: ' + signInError.message);
                         }
@@ -326,16 +323,6 @@
                 loginBtn.disabled = false;
                 loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> تسجيل الدخول';
             }
-        }
-
-        function convertUsernameToEmail(username) {
-            // Convert username to email format for Firebase
-            const usernameMap = {
-                'admin': 'admin@kaml.org.kw',
-                'manager': 'manager@kaml.org.kw'
-            };
-            
-            return usernameMap[username] || `${username}@kaml.org.kw`;
         }
 
         function showError(message) {

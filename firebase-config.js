@@ -49,7 +49,7 @@ window.firebaseServices = {
 
 // Default admin credentials (for initial setup)
 window.defaultAdmins = [
-  { username: 'admin', password: 'kaml2024', email: 'admin@kaml.org.kw' },
+  { username: 'admin', password: 'kaml12024', email: 'admin@kaml.org.kw' },
   { username: 'manager', password: 'kaml123', email: 'manager@kaml.org.kw' }
 ];
 
