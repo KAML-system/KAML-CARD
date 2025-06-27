@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إدارة البطاقات - KAML</title>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -154,6 +153,9 @@
         <div class="card-preview" id="cardPreview"></div>
     </div>
 
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    
     <script>
         if (!localStorage.getItem('isLoggedIn')) {
             window.location.href = './login.html';
@@ -211,8 +213,12 @@
             const serial = 'CAE' + Math.random().toString(36).substr(2, 5).toUpperCase();
             const signature = Math.random().toString(36).substr(2, 10).toUpperCase();
             
-            // Create QR code data with digital signature
+            // Create unique member ID
+            const memberId = 'KAML_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+            
+            // Create QR code data with digital signature - UNIQUE FOR EACH MEMBER
             const qrData = JSON.stringify({
+                id: memberId,
                 name: memberData.arabicName,
                 nameEn: memberData.englishName,
                 membershipNumber: memberData.membershipNumber,
@@ -221,7 +227,8 @@
                 serial: serial,
                 signature: signature,
                 organization: "Kuwait Association for Medical Laboratories",
-                verified: true
+                verified: true,
+                timestamp: Date.now()
             });
             
             const cardHtml = `
@@ -238,8 +245,8 @@
                     
                     <div class="card-body">
                         <div class="qr-section">
-                            <div class="qr-code" id="qrCodeContainer">
-                                <div style="width: 100px; height: 100px; background: #1e3c72; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; text-align: center; border-radius: 4px;">QR CODE</div>
+                            <div class="qr-code" id="qrCodeContainer_${memberId}">
+                                <div style="width: 100px; height: 100px; background: #1e3c72; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; text-align: center; border-radius: 4px;">جاري التحميل...</div>
                             </div>
                             <div class="scan-text">📱 Scan for verification</div>
                         </div>
@@ -262,34 +269,85 @@
                     
                     <div class="card-footer">
                         <div class="valid-member">✅✅ Valid Member</div>
-                        <div class="serial-info">📋 Serial: ${serial} | Signature: ${signature}...</div>
+                        <div class="serial-info">📋 Serial: ${serial} | Signature: ${signature}</div>
                     </div>
                 </div>
             `;
             
             document.getElementById('cardPreview').innerHTML = cardHtml;
             
-            // Generate QR Code
+            // Generate QR Code - Wait for DOM to be ready
             setTimeout(() => {
-                const container = document.getElementById('qrCodeContainer');
-                if (container && typeof QRCode !== 'undefined') {
-                    container.innerHTML = '';
-                    const canvas = document.createElement('canvas');
-                    container.appendChild(canvas);
-                    
-                    QRCode.toCanvas(canvas, qrData, {
-                        width: 100,
-                        height: 100,
-                        margin: 1,
-                        color: { dark: '#1e3c72', light: '#ffffff' }
-                    }, function (error) {
-                        if (error) {
-                            console.error('QR Code error:', error);
-                            container.innerHTML = '<div style="width: 100px; height: 100px; background: #1e3c72; color: white; display: flex; align-items: center; justify-content: center; font-size: 10px; text-align: center; border-radius: 4px;">QR ERROR</div>';
-                        }
-                    });
-                }
-            }, 200);
+                generateQRCodeForMember(qrData, `qrCodeContainer_${memberId}`, memberData);
+            }, 100);
+        }
+
+        function generateQRCodeForMember(qrData, containerId, memberData) {
+            console.log('🔄 بدء إنشاء الباركود للعضو:', memberData.arabicName);
+            console.log('📊 بيانات الباركود:', JSON.parse(qrData));
+            
+            const container = document.getElementById(containerId);
+            if (!container) {
+                console.error('❌ لم يتم العثور على حاوي الباركود:', containerId);
+                return;
+            }
+
+            // Check if QRCode library is loaded
+            if (typeof QRCode === 'undefined') {
+                console.error('❌ مكتبة QRCode غير محملة');
+                container.innerHTML = '<div style="width: 100px; height: 100px; background: #dc3545; color: white; display: flex; align-items: center; justify-content: center; font-size: 10px; text-align: center; border-radius: 4px;">مكتبة QR<br>غير محملة</div>';
+                
+                // Try to load the library again
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
+                script.onload = () => {
+                    console.log('✅ تم تحميل مكتبة QRCode');
+                    setTimeout(() => generateQRCodeForMember(qrData, containerId, memberData), 500);
+                };
+                script.onerror = () => {
+                    console.error('❌ فشل في تحميل مكتبة QRCode');
+                    container.innerHTML = '<div style="width: 100px; height: 100px; background: #dc3545; color: white; display: flex; align-items: center; justify-content: center; font-size: 10px; text-align: center; border-radius: 4px;">فشل تحميل<br>المكتبة</div>';
+                };
+                document.head.appendChild(script);
+                return;
+            }
+
+            try {
+                console.log('🔧 بدء إنشاء الباركود...');
+                
+                // Clear container
+                container.innerHTML = '';
+                
+                // Create canvas
+                const canvas = document.createElement('canvas');
+                container.appendChild(canvas);
+                
+                // Generate QR code
+                QRCode.toCanvas(canvas, qrData, {
+                    width: 100,
+                    height: 100,
+                    margin: 1,
+                    color: {
+                        dark: '#1e3c72',
+                        light: '#ffffff'
+                    }
+                }, function (error) {
+                    if (error) {
+                        console.error('❌ خطأ في إنشاء الباركود:', error);
+                        container.innerHTML = '<div style="width: 100px; height: 100px; background: #dc3545; color: white; display: flex; align-items: center; justify-content: center; font-size: 10px; text-align: center; border-radius: 4px;">خطأ في<br>الإنشاء</div>';
+                    } else {
+                        console.log('✅ تم إنشاء الباركود بنجاح للعضو:', memberData.arabicName);
+                        console.log('🎯 الباركود يحتوي على:', {
+                            name: memberData.arabicName,
+                            membershipNumber: memberData.membershipNumber,
+                            hasSignature: true
+                        });
+                    }
+                });
+            } catch (error) {
+                console.error('❌ خطأ عام في إنشاء الباركود:', error);
+                container.innerHTML = '<div style="width: 100px; height: 100px; background: #dc3545; color: white; display: flex; align-items: center; justify-content: center; font-size: 10px; text-align: center; border-radius: 4px;">خطأ عام</div>';
+            }
         }
 
         function showMessage(text, type) {
@@ -313,6 +371,15 @@
             localStorage.removeItem('isLoggedIn');
             window.location.href = './login.html';
         }
+
+        // Check QRCode library on page load
+        window.addEventListener('load', function() {
+            if (typeof QRCode !== 'undefined') {
+                console.log('✅ مكتبة QRCode محملة بنجاح');
+            } else {
+                console.error('❌ مكتبة QRCode غير محملة');
+            }
+        });
     </script>
 </body>
 </html>
