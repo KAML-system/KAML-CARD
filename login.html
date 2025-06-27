@@ -23,37 +23,43 @@
             padding: 20px;
         }
 
-        .login-container {
+        .container {
             background: white;
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
             text-align: center;
+            max-width: 400px;
+            width: 100%;
         }
 
         .logo {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 30px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 2rem;
-            color: white;
+            overflow: hidden;
+            border: 4px solid #4facfe;
+            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3);
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: white;
         }
 
         h1 {
             color: #333;
             font-size: 1.8rem;
             margin-bottom: 10px;
+            font-weight: 700;
         }
 
         .subtitle {
             color: #666;
+            font-size: 1rem;
             margin-bottom: 30px;
         }
 
@@ -72,71 +78,67 @@
         input[type="text"],
         input[type="password"] {
             width: 100%;
-            padding: 12px;
+            padding: 15px;
             border: 2px solid #e1e5e9;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1rem;
             transition: border-color 0.3s ease;
+            background: #f8f9fa;
         }
 
         input[type="text"]:focus,
         input[type="password"]:focus {
             outline: none;
             border-color: #4facfe;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
         }
 
-        .login-btn {
+        .btn {
             width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
+            padding: 15px;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
         }
 
-        .login-btn:hover {
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3);
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4);
         }
 
-        .divider {
-            margin: 20px 0;
-            color: #999;
-            font-size: 0.9rem;
+        .btn-secondary {
+            background: transparent;
+            color: #666;
+            border: 2px solid #e1e5e9;
+            margin-top: 10px;
         }
 
-        .scanner-link {
-            display: inline-block;
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            color: #333;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .scanner-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(168, 237, 234, 0.3);
+        .btn-secondary:hover {
+            background: #f8f9fa;
+            border-color: #4facfe;
+            color: #4facfe;
         }
 
         .message {
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
             margin-bottom: 20px;
             display: none;
-        }
-
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            text-align: center;
         }
 
         .message.error {
@@ -145,79 +147,109 @@
             border: 1px solid #f5c6cb;
         }
 
-        @media (max-width: 480px) {
-            .login-container {
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .login-info {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #1565c0;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e5e9;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
                 padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
+    <div class="container">
         <div class="logo">
-            <i class="fas fa-microscope"></i>
+            <img src="./logo.jpeg" alt="شعار الجمعية الكويتية للمختبرات الطبية">
         </div>
-        
-        <h1>نظام بطاقات العضوية</h1>
-        <p class="subtitle">الجمعية الكويتية للمختبرات الطبية</p>
-        
+
+        <h1>تسجيل دخول المسؤولين</h1>
+        <p class="subtitle">نظام إدارة بطاقات العضوية</p>
+
         <div class="message" id="message"></div>
-        
+
         <form id="loginForm">
             <div class="form-group">
                 <label for="username">اسم المستخدم:</label>
-                <input type="text" id="username" name="username" required placeholder="أدخل اسم المستخدم">
+                <input type="text" id="username" name="username" required placeholder="admin">
             </div>
-            
+
             <div class="form-group">
                 <label for="password">كلمة المرور:</label>
-                <input type="password" id="password" name="password" required placeholder="أدخل كلمة المرور">
+                <input type="password" id="password" name="password" required placeholder="••••••••">
             </div>
-            
-            <button type="submit" class="login-btn">
-                <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-sign-in-alt"></i>
+                تسجيل الدخول
             </button>
+
+            <a href="./index.html" class="btn btn-secondary">
+                <i class="fas fa-arrow-right"></i>
+                العودة للصفحة الرئيسية
+            </a>
         </form>
-        
-        <div class="divider">أو</div>
-        
-        <a href="./scanner.html" class="scanner-link">
-            <i class="fas fa-qrcode"></i> ماسح الباركود
-        </a>
+
+        <div class="login-info">
+            <strong>معلومات تسجيل الدخول:</strong><br>
+            اسم المستخدم: <code>admin</code><br>
+            كلمة المرور: <code>kaml2024</code>
+        </div>
+
+        <div class="footer">
+            <p>© 2024 الجمعية الكويتية للمختبرات الطبية</p>
+        </div>
     </div>
 
     <script>
-        // Default admin credentials
-        const defaultCredentials = {
-            username: 'admin',
-            password: 'kaml2024'
-        };
+        // Check if already logged in
+        if (localStorage.getItem('isLoggedIn')) {
+            window.location.href = './admin.html';
+        }
 
-        // Handle form submission
-        document.getElementById('loginForm').addEventListener('submit', handleLogin);
-
-        function handleLogin(e) {
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const formData = new FormData(e.target);
-            const username = formData.get('username');
-            const password = formData.get('password');
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
             
-            // Check if credentials match default admin
-            if (username === defaultCredentials.username && password === defaultCredentials.password) {
-                showMessage('تم تسجيل الدخول بنجاح!', 'success');
-                
-                // Set login status
+            // Simple authentication (in real app, this would be server-side)
+            if (username === 'admin' && password === 'kaml2024') {
                 localStorage.setItem('isLoggedIn', 'true');
+                showMessage('تم تسجيل الدخول بنجاح! جاري التحويل...', 'success');
                 
-                // Redirect to admin page
                 setTimeout(() => {
                     window.location.href = './admin.html';
                 }, 1500);
             } else {
                 showMessage('اسم المستخدم أو كلمة المرور غير صحيحة', 'error');
             }
-        }
+        });
 
         function showMessage(text, type) {
             const messageDiv = document.getElementById('message');
@@ -225,9 +257,11 @@
             messageDiv.className = `message ${type}`;
             messageDiv.style.display = 'block';
             
-            setTimeout(() => {
-                messageDiv.style.display = 'none';
-            }, 5000);
+            if (type === 'error') {
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            }
         }
     </script>
 </body>

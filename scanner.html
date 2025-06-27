@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ماسح الباركود - نظام بطاقات العضوية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -26,18 +27,55 @@
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #4facfe;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: white;
         }
 
         .header h1 {
             color: #333;
             font-size: 1.5rem;
-            margin-bottom: 10px;
         }
 
-        .header p {
-            color: #666;
-            font-size: 1rem;
+        .back-btn {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(168, 237, 234, 0.3);
         }
 
         .container {
@@ -45,12 +83,12 @@
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
-            text-align: center;
         }
 
         .scanner-section {
+            text-align: center;
             margin-bottom: 30px;
         }
 
@@ -58,15 +96,31 @@
             color: #333;
             margin-bottom: 20px;
             font-size: 1.3rem;
+            border-bottom: 2px solid #4facfe;
+            padding-bottom: 10px;
+            display: inline-block;
         }
 
-        #video {
+        .scanner-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px dashed #4facfe;
+        }
+
+        #qr-reader {
             width: 100%;
             max-width: 400px;
-            height: 300px;
-            border-radius: 10px;
-            background: #f0f0f0;
-            margin-bottom: 20px;
+            margin: 0 auto;
+        }
+
+        .scanner-controls {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -80,8 +134,6 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin: 5px;
-            text-decoration: none;
         }
 
         .btn-primary {
@@ -95,89 +147,21 @@
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            color: #333;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
         }
 
         .btn-secondary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(168, 237, 234, 0.3);
-        }
-
-        .member-info {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 20px;
-            display: none;
-        }
-
-        .member-info h3 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .member-card {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            border-radius: 15px;
-            padding: 20px;
-            color: white;
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            max-width: 400px;
-            margin: 20px auto;
-        }
-
-        .member-photo {
-            width: 80px;
-            height: 100px;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .member-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .member-details {
-            flex: 1;
-            text-align: right;
-        }
-
-        .member-details h4 {
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        .member-details p {
-            font-size: 14px;
-            margin-bottom: 3px;
-            opacity: 0.9;
-        }
-
-        .status-active {
-            color: #28a745;
-            font-weight: 600;
-        }
-
-        .status-inactive {
-            color: #dc3545;
-            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
         }
 
         .message {
             padding: 15px;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin: 20px 0;
             display: none;
+            text-align: center;
         }
 
         .message.success {
@@ -198,153 +182,323 @@
             border: 1px solid #bee5eb;
         }
 
+        .result-section {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .member-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #e1e5e9;
+            text-align: center;
+        }
+
+        .member-card h3 {
+            color: #1e3c72;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .member-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+            text-align: right;
+        }
+
+        .info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e1e5e9;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+
+        .status-valid {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-expired {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .instructions {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #1565c0;
+        }
+
+        .instructions h4 {
+            margin-bottom: 10px;
+            color: #0d47a1;
+        }
+
+        .instructions ul {
+            text-align: right;
+            margin-right: 20px;
+        }
+
+        .instructions li {
+            margin: 8px 0;
+        }
+
         @media (max-width: 768px) {
-            .member-card {
+            .header {
                 flex-direction: column;
+                gap: 15px;
                 text-align: center;
             }
-            
-            .member-details {
-                text-align: center;
+
+            .header-content {
+                justify-content: center;
+            }
+
+            .scanner-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .member-info {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1><i class="fas fa-qrcode"></i> ماسح الباركود</h1>
-        <p>امسح رمز QR الخاص ببطاقة العضوية للتحقق من البيانات</p>
+        <div class="header-content">
+            <div class="logo">
+                <img src="./logo.jpeg" alt="شعار الجمعية الكويتية للمختبرات الطبية">
+            </div>
+            <h1><i class="fas fa-qrcode"></i> ماسح الباركود</h1>
+        </div>
+        <a href="./index.html" class="back-btn">
+            <i class="fas fa-arrow-right"></i> العودة للرئيسية
+        </a>
     </div>
 
     <div class="container">
-        <div class="message" id="message"></div>
-
         <div class="scanner-section">
-            <h2><i class="fas fa-camera"></i> تشغيل الكاميرا</h2>
+            <h2><i class="fas fa-camera"></i> مسح بطاقة العضوية</h2>
             
-            <video id="video" autoplay muted playsinline></video>
-            
-            <div>
-                <button class="btn btn-primary" onclick="startScanner()">
-                    <i class="fas fa-play"></i> تشغيل الماسح
+            <div class="instructions">
+                <h4>تعليمات الاستخدام:</h4>
+                <ul>
+                    <li>انقر على "بدء المسح" لتشغيل الكاميرا</li>
+                    <li>وجه الكاميرا نحو الباركود الموجود على البطاقة</li>
+                    <li>تأكد من وضوح الباركود في الإطار</li>
+                    <li>سيتم قراءة البطاقة تلقائياً عند التعرف على الباركود</li>
+                </ul>
+            </div>
+
+            <div class="scanner-container">
+                <div id="qr-reader"></div>
+            </div>
+
+            <div class="scanner-controls">
+                <button id="startBtn" class="btn btn-primary">
+                    <i class="fas fa-play"></i> بدء المسح
                 </button>
-                <button class="btn btn-secondary" onclick="stopScanner()">
-                    <i class="fas fa-stop"></i> إيقاف الماسح
+                <button id="stopBtn" class="btn btn-secondary" style="display: none;">
+                    <i class="fas fa-stop"></i> إيقاف المسح
                 </button>
             </div>
+
+            <div class="message" id="message"></div>
         </div>
 
-        <div class="member-info" id="memberInfo">
-            <h3><i class="fas fa-user"></i> معلومات العضو</h3>
-            <div id="memberCard"></div>
-        </div>
-
-        <div style="margin-top: 30px;">
-            <a href="./index.html" class="btn btn-secondary">
-                <i class="fas fa-home"></i> العودة للرئيسية
-            </a>
+        <div class="result-section" id="resultSection">
+            <div class="member-card" id="memberCard">
+                <!-- Member information will be displayed here -->
+            </div>
         </div>
     </div>
 
     <script>
-        let stream = null;
-        let scanning = false;
+        let html5QrCode;
+        let isScanning = false;
 
-        function startScanner() {
-            navigator.mediaDevices.getUserMedia({ 
-                video: { 
-                    facingMode: 'environment'
-                } 
-            })
-            .then(function(mediaStream) {
-                const video = document.getElementById('video');
-                video.srcObject = mediaStream;
-                stream = mediaStream;
-                scanning = true;
-                
-                showMessage('تم تشغيل الكاميرا بنجاح. وجه الكاميرا نحو رمز QR', 'success');
-                
-                // Simulate QR scan after 3 seconds for demo
-                setTimeout(() => {
-                    if (scanning) {
-                        simulateQRScan();
-                    }
-                }, 3000);
-            })
-            .catch(function(error) {
-                console.error('Error accessing camera:', error);
-                showMessage('خطأ في الوصول للكاميرا: ' + error.message, 'error');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const messageDiv = document.getElementById('message');
+        const resultSection = document.getElementById('resultSection');
+        const memberCard = document.getElementById('memberCard');
+
+        startBtn.addEventListener('click', startScanning);
+        stopBtn.addEventListener('click', stopScanning);
+
+        function startScanning() {
+            if (isScanning) return;
+
+            html5QrCode = new Html5Qrcode("qr-reader");
+            
+            Html5Qrcode.getCameras().then(devices => {
+                if (devices && devices.length) {
+                    const cameraId = devices[0].id;
+                    
+                    html5QrCode.start(
+                        cameraId,
+                        {
+                            fps: 10,
+                            qrbox: { width: 250, height: 250 }
+                        },
+                        onScanSuccess,
+                        onScanFailure
+                    ).then(() => {
+                        isScanning = true;
+                        startBtn.style.display = 'none';
+                        stopBtn.style.display = 'inline-flex';
+                        showMessage('الكاميرا جاهزة، وجه الكاميرا نحو الباركود', 'info');
+                    }).catch(err => {
+                        showMessage('خطأ في تشغيل الكاميرا: ' + err, 'error');
+                    });
+                } else {
+                    showMessage('لم يتم العثور على كاميرا متاحة', 'error');
+                }
+            }).catch(err => {
+                showMessage('خطأ في الوصول للكاميرا: ' + err, 'error');
             });
         }
 
-        function stopScanner() {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                stream = null;
-            }
-            
-            const video = document.getElementById('video');
-            video.srcObject = null;
-            scanning = false;
-            
-            showMessage('تم إيقاف الماسح', 'info');
+        function stopScanning() {
+            if (!isScanning) return;
+
+            html5QrCode.stop().then(() => {
+                isScanning = false;
+                startBtn.style.display = 'inline-flex';
+                stopBtn.style.display = 'none';
+                showMessage('تم إيقاف المسح', 'info');
+            }).catch(err => {
+                showMessage('خطأ في إيقاف المسح: ' + err, 'error');
+            });
         }
 
-        function simulateQRScan() {
-            // Demo member data
-            const demoData = {
-                arabicName: 'أحمد محمد الكندري',
-                englishName: 'Ahmed Mohammed Al-Kandari',
-                membershipNumber: 'KAML-2024-001',
-                photoURL: 'https://via.placeholder.com/100x120/4facfe/ffffff?text=صورة',
-                status: 'active',
-                createdAt: new Date('2024-01-01')
-            };
-            
-            displayMemberInfo(demoData);
-            showMessage('تم العثور على العضو بنجاح! (بيانات تجريبية)', 'success');
+        function onScanSuccess(decodedText, decodedResult) {
+            try {
+                // Try to parse as JSON (QR code data)
+                const memberData = JSON.parse(decodedText);
+                displayMemberInfo(memberData);
+                stopScanning();
+            } catch (e) {
+                // If not JSON, treat as simple text
+                showMessage('تم قراءة الباركود: ' + decodedText, 'success');
+                displaySimpleResult(decodedText);
+                stopScanning();
+            }
+        }
+
+        function onScanFailure(error) {
+            // This callback is called when scanning fails, we can ignore it
         }
 
         function displayMemberInfo(memberData) {
-            const memberInfo = document.getElementById('memberInfo');
-            const memberCard = document.getElementById('memberCard');
-            
-            const expiryDate = new Date(memberData.createdAt);
-            expiryDate.setFullYear(expiryDate.getFullYear() + 1);
-            
-            memberCard.innerHTML = `
-                <div class="member-card">
-                    <div class="member-details">
-                        <h4>${memberData.arabicName}</h4>
-                        <p>${memberData.englishName}</p>
-                        <p>رقم العضوية: ${memberData.membershipNumber}</p>
-                        <p>الحالة: <span class="${memberData.status === 'active' ? 'status-active' : 'status-inactive'}">
-                            ${memberData.status === 'active' ? 'نشطة' : 'غير نشطة'}
-                        </span></p>
-                        <p>صالحة حتى: ${expiryDate.toLocaleDateString('ar-SA')}</p>
+            const expiryDate = new Date(memberData.expiryDate);
+            const currentDate = new Date();
+            const isValid = expiryDate > currentDate;
+
+            const memberCardHtml = `
+                <h3>✅ تم التحقق من البطاقة بنجاح</h3>
+                
+                <div class="status-badge ${isValid ? 'status-valid' : 'status-expired'}">
+                    ${isValid ? '✅ بطاقة صالحة' : '❌ بطاقة منتهية الصلاحية'}
+                </div>
+
+                <div class="member-info">
+                    <div class="info-item">
+                        <div class="info-label">الاسم بالعربية:</div>
+                        <div class="info-value">${memberData.name || 'غير محدد'}</div>
                     </div>
-                    <div class="member-photo">
-                        <img src="${memberData.photoURL}" alt="صورة العضو">
+                    <div class="info-item">
+                        <div class="info-label">الاسم بالإنجليزية:</div>
+                        <div class="info-value">${memberData.nameEn || 'غير محدد'}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">رقم العضوية:</div>
+                        <div class="info-value">${memberData.membershipNumber || 'غير محدد'}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">تاريخ الإصدار:</div>
+                        <div class="info-value">${memberData.issueDate ? new Date(memberData.issueDate).toLocaleDateString('ar-SA') : 'غير محدد'}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">تاريخ انتهاء الصلاحية:</div>
+                        <div class="info-value">${memberData.expiryDate ? new Date(memberData.expiryDate).toLocaleDateString('ar-SA') : 'غير محدد'}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">الرقم التسلسلي:</div>
+                        <div class="info-value">${memberData.serial || 'غير محدد'}</div>
                     </div>
                 </div>
             `;
-            
-            memberInfo.style.display = 'block';
+
+            memberCard.innerHTML = memberCardHtml;
+            resultSection.style.display = 'block';
+            showMessage('تم التحقق من البطاقة بنجاح!', 'success');
+        }
+
+        function displaySimpleResult(text) {
+            const memberCardHtml = `
+                <h3>📄 نتيجة المسح</h3>
+                <div class="info-item">
+                    <div class="info-label">المحتوى:</div>
+                    <div class="info-value">${text}</div>
+                </div>
+            `;
+
+            memberCard.innerHTML = memberCardHtml;
+            resultSection.style.display = 'block';
         }
 
         function showMessage(text, type) {
-            const messageDiv = document.getElementById('message');
             messageDiv.textContent = text;
             messageDiv.className = `message ${type}`;
             messageDiv.style.display = 'block';
             
-            setTimeout(() => {
-                messageDiv.style.display = 'none';
-            }, 5000);
+            if (type !== 'info') {
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            }
         }
 
-        // Show initial instructions
-        showMessage('انقر على "تشغيل الماسح" لبدء مسح رموز QR', 'info');
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            if (isScanning && html5QrCode) {
+                html5QrCode.stop();
+            }
+        });
     </script>
 </body>
 </html>
