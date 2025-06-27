@@ -153,9 +153,6 @@
         <div class="card-preview" id="cardPreview"></div>
     </div>
 
-    <!-- QR Code Library -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-    
     <script>
         if (!localStorage.getItem('isLoggedIn')) {
             window.location.href = './login.html';
@@ -231,6 +228,9 @@
                 timestamp: Date.now()
             });
             
+            // Generate QR code using Google Charts API (more reliable)
+            const qrCodeUrl = generateQRCodeURL(qrData);
+            
             const cardHtml = `
                 <div class="membership-card">
                     <div class="card-header">
@@ -245,8 +245,8 @@
                     
                     <div class="card-body">
                         <div class="qr-section">
-                            <div class="qr-code" id="qrCodeContainer_${memberId}">
-                                <div style="width: 100px; height: 100px; background: #1e3c72; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; text-align: center; border-radius: 4px;">جاري التحميل...</div>
+                            <div class="qr-code">
+                                <img src="${qrCodeUrl}" alt="QR Code" style="width: 100px; height: 100px; border-radius: 4px;">
                             </div>
                             <div class="scan-text">📱 Scan for verification</div>
                         </div>
@@ -276,78 +276,15 @@
             
             document.getElementById('cardPreview').innerHTML = cardHtml;
             
-            // Generate QR Code - Wait for DOM to be ready
-            setTimeout(() => {
-                generateQRCodeForMember(qrData, `qrCodeContainer_${memberId}`, memberData);
-            }, 100);
+            console.log('✅ تم إنشاء البطاقة للعضو:', memberData.arabicName);
+            console.log('🎯 بيانات الباركود:', JSON.parse(qrData));
         }
 
-        function generateQRCodeForMember(qrData, containerId, memberData) {
-            console.log('🔄 بدء إنشاء الباركود للعضو:', memberData.arabicName);
-            console.log('📊 بيانات الباركود:', JSON.parse(qrData));
-            
-            const container = document.getElementById(containerId);
-            if (!container) {
-                console.error('❌ لم يتم العثور على حاوي الباركود:', containerId);
-                return;
-            }
-
-            // Check if QRCode library is loaded
-            if (typeof QRCode === 'undefined') {
-                console.error('❌ مكتبة QRCode غير محملة');
-                container.innerHTML = '<div style="width: 100px; height: 100px; background: #dc3545; color: white; display: flex; align-items: center; justify-content: center; font-size: 10px; text-align: center; border-radius: 4px;">مكتبة QR<br>غير محملة</div>';
-                
-                // Try to load the library again
-                const script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
-                script.onload = () => {
-                    console.log('✅ تم تحميل مكتبة QRCode');
-                    setTimeout(() => generateQRCodeForMember(qrData, containerId, memberData), 500);
-                };
-                script.onerror = () => {
-                    console.error('❌ فشل في تحميل مكتبة QRCode');
-                    container.innerHTML = '<div style="width: 100px; height: 100px; background: #dc3545; color: white; display: flex; align-items: center; justify-content: center; font-size: 10px; text-align: center; border-radius: 4px;">فشل تحميل<br>المكتبة</div>';
-                };
-                document.head.appendChild(script);
-                return;
-            }
-
-            try {
-                console.log('🔧 بدء إنشاء الباركود...');
-                
-                // Clear container
-                container.innerHTML = '';
-                
-                // Create canvas
-                const canvas = document.createElement('canvas');
-                container.appendChild(canvas);
-                
-                // Generate QR code
-                QRCode.toCanvas(canvas, qrData, {
-                    width: 100,
-                    height: 100,
-                    margin: 1,
-                    color: {
-                        dark: '#1e3c72',
-                        light: '#ffffff'
-                    }
-                }, function (error) {
-                    if (error) {
-                        console.error('❌ خطأ في إنشاء الباركود:', error);
-                        container.innerHTML = '<div style="width: 100px; height: 100px; background: #dc3545; color: white; display: flex; align-items: center; justify-content: center; font-size: 10px; text-align: center; border-radius: 4px;">خطأ في<br>الإنشاء</div>';
-                    } else {
-                        console.log('✅ تم إنشاء الباركود بنجاح للعضو:', memberData.arabicName);
-                        console.log('🎯 الباركود يحتوي على:', {
-                            name: memberData.arabicName,
-                            membershipNumber: memberData.membershipNumber,
-                            hasSignature: true
-                        });
-                    }
-                });
-            } catch (error) {
-                console.error('❌ خطأ عام في إنشاء الباركود:', error);
-                container.innerHTML = '<div style="width: 100px; height: 100px; background: #dc3545; color: white; display: flex; align-items: center; justify-content: center; font-size: 10px; text-align: center; border-radius: 4px;">خطأ عام</div>';
-            }
+        function generateQRCodeURL(data) {
+            // Use Google Charts API to generate QR code
+            const encodedData = encodeURIComponent(data);
+            const size = '100x100';
+            return `https://chart.googleapis.com/chart?chs=${size}&cht=qr&chl=${encodedData}&choe=UTF-8`;
         }
 
         function showMessage(text, type) {
@@ -371,15 +308,6 @@
             localStorage.removeItem('isLoggedIn');
             window.location.href = './login.html';
         }
-
-        // Check QRCode library on page load
-        window.addEventListener('load', function() {
-            if (typeof QRCode !== 'undefined') {
-                console.log('✅ مكتبة QRCode محملة بنجاح');
-            } else {
-                console.error('❌ مكتبة QRCode غير محملة');
-            }
-        });
     </script>
 </body>
 </html>
