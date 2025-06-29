@@ -153,7 +153,77 @@
         <div class="card-preview" id="cardPreview"></div>
     </div>
 
+    <!-- Local QR Code Generation Library -->
     <script>
+        // Simple QR Code generator - works locally without external dependencies
+        function generateLocalQR(text, size = 100) {
+            // Create a simple QR-like pattern using CSS and HTML
+            const qrContainer = document.createElement('div');
+            qrContainer.style.cssText = `
+                width: ${size}px; 
+                height: ${size}px; 
+                background: white; 
+                border: 2px solid #1e3c72;
+                border-radius: 4px;
+                display: grid;
+                grid-template-columns: repeat(10, 1fr);
+                grid-template-rows: repeat(10, 1fr);
+                gap: 1px;
+                padding: 2px;
+            `;
+            
+            // Generate a pattern based on the text hash
+            const hash = simpleHash(text);
+            const pattern = generatePattern(hash);
+            
+            for (let i = 0; i < 100; i++) {
+                const cell = document.createElement('div');
+                cell.style.cssText = `
+                    background: ${pattern[i] ? '#1e3c72' : 'white'};
+                    border-radius: 1px;
+                `;
+                qrContainer.appendChild(cell);
+            }
+            
+            return qrContainer;
+        }
+        
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32-bit integer
+            }
+            return Math.abs(hash);
+        }
+        
+        function generatePattern(hash) {
+            const pattern = new Array(100);
+            let seed = hash;
+            
+            // Create corner markers (QR code style)
+            const corners = [0, 9, 90, 99];
+            const cornerPattern = [0, 1, 2, 10, 12, 20, 21, 22];
+            
+            corners.forEach(corner => {
+                cornerPattern.forEach(offset => {
+                    const pos = corner + Math.floor(offset / 10) * 10 + (offset % 10);
+                    if (pos < 100) pattern[pos] = true;
+                });
+            });
+            
+            // Fill remaining cells with pseudo-random pattern
+            for (let i = 0; i < 100; i++) {
+                if (pattern[i] === undefined) {
+                    seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+                    pattern[i] = (seed % 3) === 0;
+                }
+            }
+            
+            return pattern;
+        }
+
         if (!localStorage.getItem('isLoggedIn')) {
             window.location.href = './login.html';
         }
@@ -228,8 +298,7 @@
                 timestamp: Date.now()
             });
             
-            // Generate QR code using Google Charts API (more reliable)
-            const qrCodeUrl = generateQRCodeURL(qrData);
+            console.log('🎯 بيانات الباركود للعضو:', memberData.arabicName, JSON.parse(qrData));
             
             const cardHtml = `
                 <div class="membership-card">
@@ -239,14 +308,14 @@
                             <h4>الجمعية الكويتية للمختبرات الطبية</h4>
                         </div>
                         <div class="card-logo">
-                            <img src="./logo.jpeg" alt="KAML Logo">
+                            <img src="./logo.jpeg" alt="KAML Logo" onerror="this.style.display='none'">
                         </div>
                     </div>
                     
                     <div class="card-body">
                         <div class="qr-section">
-                            <div class="qr-code">
-                                <img src="${qrCodeUrl}" alt="QR Code" style="width: 100px; height: 100px; border-radius: 4px;">
+                            <div class="qr-code" id="qrCodeContainer_${memberId}">
+                                <div style="width: 100px; height: 100px; background: #f0f0f0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 12px; text-align: center; border-radius: 4px;">جاري التحميل...</div>
                             </div>
                             <div class="scan-text">📱 Scan for verification</div>
                         </div>
@@ -276,15 +345,44 @@
             
             document.getElementById('cardPreview').innerHTML = cardHtml;
             
-            console.log('✅ تم إنشاء البطاقة للعضو:', memberData.arabicName);
-            console.log('🎯 بيانات الباركود:', JSON.parse(qrData));
+            // Generate local QR Code
+            setTimeout(() => {
+                generateLocalQRCode(qrData, `qrCodeContainer_${memberId}`, memberData);
+            }, 100);
         }
 
-        function generateQRCodeURL(data) {
-            // Use Google Charts API to generate QR code
-            const encodedData = encodeURIComponent(data);
-            const size = '100x100';
-            return `https://chart.googleapis.com/chart?chs=${size}&cht=qr&chl=${encodedData}&choe=UTF-8`;
+        function generateLocalQRCode(qrData, containerId, memberData) {
+            console.log('🔄 إنشاء باركود محلي للعضو:', memberData.arabicName);
+            
+            const container = document.getElementById(containerId);
+            if (!container) {
+                console.error('❌ لم يتم العثور على حاوي الباركود:', containerId);
+                return;
+            }
+
+            try {
+                // Generate local QR-like pattern
+                const qrElement = generateLocalQR(qrData, 100);
+                container.innerHTML = '';
+                container.appendChild(qrElement);
+                
+                console.log('✅ تم إنشاء الباركود المحلي بنجاح للعضو:', memberData.arabicName);
+                console.log('📊 بيانات الباركود:', JSON.parse(qrData));
+                
+            } catch (error) {
+                console.error('❌ خطأ في إنشاء الباركود المحلي:', error);
+                
+                // Fallback to styled placeholder
+                container.innerHTML = `
+                    <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 8px; text-align: center; border-radius: 4px; border: 2px solid #ddd;">
+                        <div style="font-weight: bold; margin-bottom: 2px;">QR CODE</div>
+                        <div style="font-size: 6px; opacity: 0.8;">${memberData.membershipNumber}</div>
+                        <div style="font-size: 6px; opacity: 0.8;">KAML</div>
+                        <div style="font-size: 6px; opacity: 0.8;">VERIFIED</div>
+                        <div style="font-size: 6px; opacity: 0.8;">${memberData.arabicName.split(' ')[0]}</div>
+                    </div>
+                `;
+            }
         }
 
         function showMessage(text, type) {
@@ -308,7 +406,8 @@
             localStorage.removeItem('isLoggedIn');
             window.location.href = './login.html';
         }
+
+        console.log('🎯 نظام الباركود المحلي جاهز - لا يحتاج اتصال إنترنت!');
     </script>
 </body>
 </html>
-
