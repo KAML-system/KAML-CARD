@@ -153,78 +153,11 @@
         <div class="card-preview" id="cardPreview"></div>
     </div>
 
-    <!-- Local QR Code Generation Library -->
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    
     <script>
-        // Simple QR Code generator - works locally without external dependencies
-        function generateLocalQR(text, size = 100) {
-            // Create a simple QR-like pattern using CSS and HTML
-            const qrContainer = document.createElement('div');
-            qrContainer.style.cssText = `
-                width: ${size}px; 
-                height: ${size}px; 
-                background: white; 
-                border: 2px solid #1e3c72;
-                border-radius: 4px;
-                display: grid;
-                grid-template-columns: repeat(10, 1fr);
-                grid-template-rows: repeat(10, 1fr);
-                gap: 1px;
-                padding: 2px;
-            `;
-            
-            // Generate a pattern based on the text hash
-            const hash = simpleHash(text);
-            const pattern = generatePattern(hash);
-            
-            for (let i = 0; i < 100; i++) {
-                const cell = document.createElement('div');
-                cell.style.cssText = `
-                    background: ${pattern[i] ? '#1e3c72' : 'white'};
-                    border-radius: 1px;
-                `;
-                qrContainer.appendChild(cell);
-            }
-            
-            return qrContainer;
-        }
-        
-        function simpleHash(str) {
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) {
-                const char = str.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash = hash & hash; // Convert to 32-bit integer
-            }
-            return Math.abs(hash);
-        }
-        
-        function generatePattern(hash) {
-            const pattern = new Array(100);
-            let seed = hash;
-            
-            // Create corner markers (QR code style)
-            const corners = [0, 9, 90, 99];
-            const cornerPattern = [0, 1, 2, 10, 12, 20, 21, 22];
-            
-            corners.forEach(corner => {
-                cornerPattern.forEach(offset => {
-                    const pos = corner + Math.floor(offset / 10) * 10 + (offset % 10);
-                    if (pos < 100) pattern[pos] = true;
-                });
-            });
-            
-            // Fill remaining cells with pseudo-random pattern
-            for (let i = 0; i < 100; i++) {
-                if (pattern[i] === undefined) {
-                    seed = (seed * 1103515245 + 12345) & 0x7fffffff;
-                    pattern[i] = (seed % 3) === 0;
-                }
-            }
-            
-            return pattern;
-        }
-
-        if (!localStorage.getItem('isLoggedIn')) {
+        if (!localStorage.getItem('isLoggedIn' )) {
             window.location.href = './login.html';
         }
 
@@ -234,7 +167,7 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('photoPreview').innerHTML = 
-                        `<img src="${e.target.result}" alt="معاينة الصورة">`;
+                        \`<img src="\${e.target.result}" alt="معاينة الصورة">\`;
                 };
                 reader.readAsDataURL(file);
             }
@@ -300,7 +233,7 @@
             
             console.log('🎯 بيانات الباركود للعضو:', memberData.arabicName, JSON.parse(qrData));
             
-            const cardHtml = `
+            const cardHtml = \`
                 <div class="membership-card">
                     <div class="card-header">
                         <div class="header-text">
@@ -314,45 +247,45 @@
                     
                     <div class="card-body">
                         <div class="qr-section">
-                            <div class="qr-code" id="qrCodeContainer_${memberId}">
+                            <div class="qr-code" id="qrCodeContainer_\${memberId}">
                                 <div style="width: 100px; height: 100px; background: #f0f0f0; color: #666; display: flex; align-items: center; justify-content: center; font-size: 12px; text-align: center; border-radius: 4px;">جاري التحميل...</div>
                             </div>
                             <div class="scan-text">📱 Scan for verification</div>
                         </div>
                         
                         <div class="member-info">
-                            <div class="member-name-ar">${memberData.arabicName}</div>
-                            <div class="member-name-en">${memberData.englishName}</div>
-                            <div class="membership-number">${memberData.membershipNumber}</div>
+                            <div class="member-name-ar">\${memberData.arabicName}</div>
+                            <div class="member-name-en">\${memberData.englishName}</div>
+                            <div class="membership-number">\${memberData.membershipNumber}</div>
                             <div class="membership-label">Membership No:</div>
                             <div class="dates-info">
-                                <div>📅 Issue: ${issueDate.toLocaleDateString('en-GB')}</div>
-                                <div>📅 Expiry: ${expiryDate.toLocaleDateString('en-GB')}</div>
+                                <div>📅 Issue: \${issueDate.toLocaleDateString('en-GB')}</div>
+                                <div>📅 Expiry: \${expiryDate.toLocaleDateString('en-GB')}</div>
                             </div>
                         </div>
                         
                         <div class="member-photo">
-                            <img src="${memberData.photoURL}" alt="صورة العضو">
+                            <img src="\${memberData.photoURL}" alt="صورة العضو">
                         </div>
                     </div>
                     
                     <div class="card-footer">
                         <div class="valid-member">✅✅ Valid Member</div>
-                        <div class="serial-info">📋 Serial: ${serial} | Signature: ${signature}</div>
+                        <div class="serial-info">📋 Serial: \${serial} | Signature: \${signature}</div>
                     </div>
                 </div>
-            `;
+            \`;
             
             document.getElementById('cardPreview').innerHTML = cardHtml;
             
-            // Generate local QR Code
+            // Generate QR Code with multiple fallback methods
             setTimeout(() => {
-                generateLocalQRCode(qrData, `qrCodeContainer_${memberId}`, memberData);
+                generateRealQRCode(qrData, \`qrCodeContainer_\${memberId}\`, memberData);
             }, 100);
         }
 
-        function generateLocalQRCode(qrData, containerId, memberData) {
-            console.log('🔄 إنشاء باركود محلي للعضو:', memberData.arabicName);
+        function generateRealQRCode(qrData, containerId, memberData) {
+            console.log('🔄 إنشاء باركود حقيقي للعضو:', memberData.arabicName);
             
             const container = document.getElementById(containerId);
             if (!container) {
@@ -360,35 +293,130 @@
                 return;
             }
 
-            try {
-                // Generate local QR-like pattern
-                const qrElement = generateLocalQR(qrData, 100);
-                container.innerHTML = '';
-                container.appendChild(qrElement);
+            // Method 1: Try QRCode.js library first
+            if (typeof QRCode !== 'undefined') {
+                try {
+                    container.innerHTML = '';
+                    const canvas = document.createElement('canvas');
+                    container.appendChild(canvas);
+                    
+                    QRCode.toCanvas(canvas, qrData, {
+                        width: 100,
+                        height: 100,
+                        margin: 1,
+                        color: {
+                            dark: '#1e3c72',
+                            light: '#ffffff'
+                        }
+                    }, function (error) {
+                        if (error) {
+                            console.error('❌ خطأ في QRCode.js:', error);
+                            tryAPIMethod();
+                        } else {
+                            console.log('✅ تم إنشاء الباركود بنجاح باستخدام QRCode.js للعضو:', memberData.arabicName);
+                        }
+                    });
+                    return;
+                } catch (error) {
+                    console.error('❌ خطأ في QRCode.js:', error);
+                    tryAPIMethod();
+                }
+            } else {
+                console.log('⚠️ مكتبة QRCode.js غير متاحة، جاري المحاولة مع API...');
+                tryAPIMethod();
+            }
+
+            function tryAPIMethod() {
+                // Method 2: Try multiple QR API services
+                const apis = [
+                    {
+                        name: 'QRServer',
+                        url: \`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=\${encodeURIComponent(qrData )}&format=png\`
+                    },
+                    {
+                        name: 'QuickChart',
+                        url: \`https://quickchart.io/qr?text=\${encodeURIComponent(qrData )}&size=100&format=png\`
+                    }
+                ];
+
+                let currentApiIndex = 0;
+
+                function tryNextAPI() {
+                    if (currentApiIndex >= apis.length) {
+                        console.error('❌ فشل في جميع خدمات الباركود');
+                        showFallbackQR();
+                        return;
+                    }
+
+                    const api = apis[currentApiIndex];
+                    console.log(\`🔄 جاري المحاولة مع \${api.name}...\`);
+
+                    const img = new Image();
+                    img.crossOrigin = 'anonymous';
+                    
+                    img.onload = function() {
+                        console.log(\`✅ تم إنشاء الباركود بنجاح باستخدام \${api.name} للعضو:\`, memberData.arabicName);
+                        container.innerHTML = \`<img src="\${api.url}" alt="QR Code" style="width: 100px; height: 100px; border-radius: 4px;">\`;
+                    };
+                    
+                    img.onerror = function() {
+                        console.log(\`❌ فشل \${api.name}، جاري المحاولة مع الخدمة التالية...\`);
+                        currentApiIndex++;
+                        setTimeout(tryNextAPI, 500);
+                    };
+                    
+                    img.src = api.url;
+                }
+
+                tryNextAPI();
+            }
+
+            function showFallbackQR() {
+                // Create a data URL QR code as last resort
+                const canvas = document.createElement('canvas');
+                canvas.width = 100;
+                canvas.height = 100;
+                const ctx = canvas.getContext('2d');
                 
-                console.log('✅ تم إنشاء الباركود المحلي بنجاح للعضو:', memberData.arabicName);
-                console.log('📊 بيانات الباركود:', JSON.parse(qrData));
+                // Create a simple QR-like pattern
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, 100, 100);
                 
-            } catch (error) {
-                console.error('❌ خطأ في إنشاء الباركود المحلي:', error);
+                ctx.fillStyle = '#1e3c72';
                 
-                // Fallback to styled placeholder
-                container.innerHTML = `
-                    <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 8px; text-align: center; border-radius: 4px; border: 2px solid #ddd;">
-                        <div style="font-weight: bold; margin-bottom: 2px;">QR CODE</div>
-                        <div style="font-size: 6px; opacity: 0.8;">${memberData.membershipNumber}</div>
-                        <div style="font-size: 6px; opacity: 0.8;">KAML</div>
-                        <div style="font-size: 6px; opacity: 0.8;">VERIFIED</div>
-                        <div style="font-size: 6px; opacity: 0.8;">${memberData.arabicName.split(' ')[0]}</div>
-                    </div>
-                `;
+                // Create finder patterns (corners)
+                const patterns = [
+                    {x: 0, y: 0}, {x: 70, y: 0}, {x: 0, y: 70}
+                ];
+                
+                patterns.forEach(pattern => {
+                    ctx.fillRect(pattern.x, pattern.y, 20, 20);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(pattern.x + 2, pattern.y + 2, 16, 16);
+                    ctx.fillStyle = '#1e3c72';
+                    ctx.fillRect(pattern.x + 6, pattern.y + 6, 8, 8);
+                });
+                
+                // Add data pattern based on member data
+                const hash = memberData.arabicName + memberData.membershipNumber;
+                for (let i = 0; i < hash.length && i < 20; i++) {
+                    const x = 25 + (i % 5) * 8;
+                    const y = 25 + Math.floor(i / 5) * 8;
+                    if (hash.charCodeAt(i) % 2 === 0) {
+                        ctx.fillRect(x, y, 6, 6);
+                    }
+                }
+                
+                const dataUrl = canvas.toDataURL();
+                container.innerHTML = \`<img src="\${dataUrl}" alt="QR Code" style="width: 100px; height: 100px; border-radius: 4px;">\`;
+                console.log('📋 تم إنشاء باركود احتياطي للعضو:', memberData.arabicName);
             }
         }
 
         function showMessage(text, type) {
             const messageDiv = document.getElementById('message');
             messageDiv.textContent = text;
-            messageDiv.className = `message ${type}`;
+            messageDiv.className = \`message \${type}\`;
             messageDiv.style.display = 'block';
             
             if (type !== 'info') {
@@ -407,7 +435,14 @@
             window.location.href = './login.html';
         }
 
-        console.log('🎯 نظام الباركود المحلي جاهز - لا يحتاج اتصال إنترنت!');
+        // Test QR code library on load
+        window.addEventListener('load', function() {
+            if (typeof QRCode !== 'undefined') {
+                console.log('✅ مكتبة QRCode.js محملة بنجاح');
+            } else {
+                console.log('⚠️ مكتبة QRCode.js غير محملة، سيتم استخدام خدمات API');
+            }
+        });
     </script>
 </body>
 </html>
